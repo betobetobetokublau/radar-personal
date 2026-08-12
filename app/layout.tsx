@@ -24,6 +24,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Sin esto, iOS reporta env(safe-area-inset-*) = 0 y la barra de abajo
+  // queda pegada al borde del iPhone (debajo de la barra del home).
+  viewportFit: "cover",
 };
 
 // Decide el modo oscuro ANTES de pintar la página para evitar el parpadeo:

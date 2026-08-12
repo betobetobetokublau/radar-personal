@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Colores = tokens del tema "seria": --c-accent / --c-on-accent -->
+  <rect width="512" height="512" rx="96" fill="#1C4E80"/>
+  <text x="256" y="352" text-anchor="middle" font-family="'Libre Franklin', 'Helvetica Neue', Arial, sans-serif" font-size="280" font-weight="700" fill="#FFFFFF">R</text>
+</svg>
