@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Instrument_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Branding propio (2026-08-13): Archivo para display (grotesca geométrica,
@@ -51,7 +52,12 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
       </head>
-      <body className="bg-app font-body text-default">{children}</body>
+      <body className="bg-app font-body text-default">
+        {children}
+        {/* Vistas básicas de Vercel Analytics (plan Hobby): SIN track() ni
+            eventos custom — son de plan Pro y fallan en silencio en gratis. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

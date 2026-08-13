@@ -38,10 +38,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }
 
-  let body: { email?: unknown; answer?: unknown };
+  let body: { email?: unknown; answer?: unknown; module?: unknown };
   try {
     body = await request.json();
   } catch {
+    return NextResponse.json({ ok: false }, { status: 400 });
+  }
+  // "null" es JSON válido: sin este chequeo, body.email truena con un 500
+  // en vez de responder 400.
+  if (body === null || typeof body !== "object") {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
@@ -49,6 +54,9 @@ export async function POST(request: Request) {
     typeof body.email === "string" ? body.email.trim().slice(0, 200) : "";
   const answer =
     typeof body.answer === "string" ? body.answer.trim().slice(0, 2000) : "";
+  // `module` separa los experimentos en el tablero de raicode. Lista blanca
+  // estricta: nunca reenviar texto arbitrario del cliente en este campo.
+  const module = body.module === "crecer" ? "crecer" : undefined;
 
   // Validación mínima: correo con forma de correo y respuesta no vacía.
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || answer.length === 0) {
@@ -59,7 +67,7 @@ export async function POST(request: Request) {
     const res = await fetch(COLLECTOR_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, answer }),
+      body: JSON.stringify(module ? { email, answer, module } : { email, answer }),
       // Si el colector se cuelga, soltamos a los 10s en vez de detener
       // la función hasta el timeout de la plataforma.
       signal: AbortSignal.timeout(10_000),

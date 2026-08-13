@@ -36,7 +36,8 @@ export async function updateSession(request: NextRequest) {
   // Rutas PÚBLICAS (sin login): la página de validación/waitlist y su
   // endpoint de envío. Match EXACTO — con prefijos, cualquier ruta futura
   // bajo /validar* nacería pública sin que nadie lo note.
-  const isPublicPath = path === "/validar" || path === "/api/validar";
+  const isPublicPath =
+    path === "/validar" || path === "/api/validar" || path === "/crece";
 
   // Los redirects deben CONSERVAR las cookies que getUser() acaba de rotar
   // (viven en supabaseResponse); si no, la sesión renovada se pierde.

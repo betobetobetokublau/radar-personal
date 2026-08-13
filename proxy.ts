@@ -13,6 +13,9 @@ export const config = {
      * Todas las rutas excepto estáticos y assets generados
      * (_next, favicon, íconos, manifest, imágenes).
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // _vercel excluido: ahí viven el script y los beacons de Analytics —
+    // si el guardia los intercepta, los visitantes anónimos cuentan CERO
+    // visitas (y ni se nota en desarrollo).
+    "/((?!_next/static|_next/image|_vercel|favicon.ico|icon|apple-icon|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
