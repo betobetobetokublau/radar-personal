@@ -1,11 +1,22 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { CalendarDays, FolderKanban, ListTodo } from "lucide-react";
 import type { Item, Kind } from "@/lib/types";
 import { KIND_LABELS } from "@/lib/types";
 import { useItems } from "@/lib/useItems";
+import {
+  DEFAULT_ASSIGNMENTS,
+  LAYOUT_LABELS,
+  loadLayoutPrefs,
+  saveAssignment,
+  saveLayoutMode,
+  type LayoutMode,
+} from "@/lib/layout";
+import Header from "@/components/Header";
+import InstallHint from "@/components/InstallHint";
 import Column from "@/components/Column";
+import ListPicker from "@/components/ListPicker";
 import EditSheet from "@/components/EditSheet";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import Toast, { type ToastData } from "@/components/Toast";
@@ -18,6 +29,18 @@ const NAV_ICONS: Record<Kind, typeof ListTodo> = {
   project: FolderKanban,
 };
 
+// Borde sutil que delinea cada zona del layout (solo ≥768px; el celular
+// conserva su vista de pestañas sin contenedores). La zona NO lleva fondo:
+// las tarjetas de adentro ya son surface y perderían contraste tono-sobre-tono.
+const ZONE_CLASS =
+  "border-default min-w-0 rounded-[var(--radius-lg)] md:border md:p-4";
+
+// useLayoutEffect corre ANTES del primer pintado (evita el brinco visual al
+// restaurar el acomodo guardado), pero en el servidor no existe — ahí cae a
+// useEffect para no generar warnings de SSR.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function Panel() {
   const { items, loading, error, add, update, toggleDone, remove } = useItems();
   const [active, setActive] = useState<Kind>("task");
@@ -25,7 +48,39 @@ export default function Panel() {
   const [confirming, setConfirming] = useState<Item | null>(null);
   const [toast, setToast] = useState<ToastData | null>(null);
 
+  // Acomodo del panel. Se lee del dispositivo tras montar (localStorage no
+  // existe en el servidor); mientras, se pinta el default sin selector activo.
+  const [mode, setMode] = useState<LayoutMode>("3v");
+  const [assignments, setAssignments] = useState(DEFAULT_ASSIGNMENTS);
+
+  useIsomorphicLayoutEffect(() => {
+    const prefs = loadLayoutPrefs();
+    setMode(prefs.mode);
+    setAssignments(prefs.assignments);
+  }, []);
+
   const dismissToast = useCallback(() => setToast(null), []);
+
+  function changeMode(next: LayoutMode) {
+    setMode(next);
+    saveLayoutMode(next);
+    // Las zonas de `next` ya traen su última asignación (o el default) —
+    // viven en `assignments`, que persiste por layout.
+  }
+
+  // Asigna la lista `kind` a la zona `zoneIndex` del layout actual.
+  // Si otra zona ya mostraba esa lista, se intercambian.
+  function assignList(zoneIndex: number, kind: Kind) {
+    setAssignments((prev) => {
+      const zones = [...prev[mode]];
+      const from = zones.indexOf(kind);
+      const displaced = zones[zoneIndex];
+      zones[zoneIndex] = kind;
+      if (from >= 0 && from !== zoneIndex) zones[from] = displaced;
+      saveAssignment(mode, zones);
+      return { ...prev, [mode]: zones };
+    });
+  }
 
   // Tachar es reversible → se hace de inmediato y se ofrece "Deshacer" 7s.
   async function handleToggle(item: Item) {
@@ -50,31 +105,92 @@ export default function Panel() {
     if (ok) setToast({ message: "Borrado.", tone: "info" });
   }
 
-  return (
-    <>
-      {error && (
-        <p role="alert" className="alert-error px-4 py-3 text-sm">
-          {error}
-        </p>
-      )}
+  function zoneColumn(zoneIndex: number, horizontal: boolean) {
+    const kind = assignments[mode][zoneIndex];
+    return (
+      <Column
+        // key por lista: al intercambiar zonas, el formulario de captura se
+        // remonta — sin esto, un texto a medio escribir "migraría" de lista.
+        key={kind}
+        kind={kind}
+        items={items}
+        loading={loading}
+        onAdd={add}
+        onToggle={(item) => void handleToggle(item)}
+        onOpen={setEditing}
+        horizontal={horizontal}
+        titleAction={
+          <ListPicker current={kind} onSelect={(k) => assignList(zoneIndex, k)} />
+        }
+      />
+    );
+  }
 
-      <div className="grid items-start gap-4 md:grid-cols-3 md:gap-6">
-        {KINDS.map((kind) => (
-          <div
-            key={kind}
-            className={kind === active ? "min-w-0" : "hidden md:block md:min-w-0"}
-          >
-            <Column
-              kind={kind}
-              items={items}
-              loading={loading}
-              onAdd={add}
-              onToggle={(item) => void handleToggle(item)}
-              onOpen={setEditing}
-            />
+  return (
+    <div className="app-shell">
+      <Header>
+        <div className="hidden items-center gap-2 md:flex">
+          <span className="text-sm font-semibold text-muted">Acomodo:</span>
+          <div className="segmented" role="tablist" aria-label="Acomodo del panel">
+            {(["3v", "2v1h"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="tab"
+                className="segment"
+                aria-selected={mode === m}
+                onClick={() => changeMode(m)}
+              >
+                {LAYOUT_LABELS[m]}
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      </Header>
+
+      <main className="page has-bottom-nav">
+        <InstallHint />
+
+        {error && (
+          <p role="alert" className="alert-error px-4 py-3 text-sm">
+            {error}
+          </p>
+        )}
+
+        {/* Celular: una lista a la vez, pestañas abajo — sin cambios. */}
+        <div className="md:hidden">
+          <Column
+            kind={active}
+            items={items}
+            loading={loading}
+            onAdd={add}
+            onToggle={(item) => void handleToggle(item)}
+            onOpen={setEditing}
+          />
+        </div>
+
+        {/* Pantalla grande (iPad de pared / escritorio): zonas con borde. */}
+        {mode === "3v" ? (
+          <div className="hidden md:grid md:grid-cols-3 md:items-start md:gap-5">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className={ZONE_CLASS}>
+                {zoneColumn(i, false)}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="hidden md:flex md:flex-col md:gap-5">
+            <div className="md:grid md:grid-cols-2 md:items-start md:gap-5">
+              {[0, 1].map((i) => (
+                <div key={i} className={ZONE_CLASS}>
+                  {zoneColumn(i, false)}
+                </div>
+              ))}
+            </div>
+            <div className={ZONE_CLASS}>{zoneColumn(2, true)}</div>
+          </div>
+        )}
+      </main>
 
       <nav className="bottom-nav" aria-label="Secciones">
         {KINDS.map((kind) => {
@@ -115,6 +231,6 @@ export default function Panel() {
       )}
 
       <Toast toast={toast} onDismiss={dismissToast} />
-    </>
+    </div>
   );
 }

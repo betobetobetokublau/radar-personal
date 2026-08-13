@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut, Moon, Sun } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function Header() {
+export default function Header({ children }: { children?: React.ReactNode }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [dark, setDark] = useState(false);
@@ -33,7 +33,10 @@ export default function Header() {
   return (
     <header className="app-header">
       <h1 className="font-display text-lg text-default">Radar Personal</h1>
-      <div className="ml-auto flex items-center gap-1">
+      <div className="flex min-w-0 flex-1 items-center justify-center">
+        {children}
+      </div>
+      <div className="flex items-center gap-1">
         <button
           type="button"
           className="icon-btn"
