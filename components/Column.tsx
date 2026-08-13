@@ -71,45 +71,68 @@ export default function Column({
     kind === "date" ? it.due_date && daysUntil(it.due_date) >= 0 : !it.done
   ).length;
 
+  if (horizontal) {
+    return (
+      <section className="flex min-w-0 flex-col gap-3" aria-label={KIND_LABELS[kind]}>
+        {/* Encabezado compacto: título + selector, y la captura EN el mismo
+            renglón (a 48px del selector) para que la fila sea menos alta. */}
+        <div className="flex items-center gap-2">
+          <h2 className="font-display text-lg text-default">{KIND_LABELS[kind]}</h2>
+          {pending > 0 && <span className="badge-count">{pending}</span>}
+          {titleAction}
+          <div className="ml-12 flex min-w-0 flex-1 items-center">
+            <AddForm kind={kind} onAdd={onAdd} inline />
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex h-36 gap-3" aria-hidden="true">
+            <div className="skeleton h-full w-56 flex-none" />
+            <div className="skeleton h-full w-56 flex-none" style={{ animationDelay: "150ms" }} />
+            <div className="skeleton h-full w-56 flex-none" style={{ animationDelay: "300ms" }} />
+          </div>
+        ) : sorted.length === 0 ? (
+          <div className="empty-state h-36 justify-center py-0">
+            <p className="font-display text-default">{EMPTY_COPY[kind].title}</p>
+            <p className="text-sm text-muted">{EMPTY_COPY[kind].help}</p>
+          </div>
+        ) : (
+          <ul className="scroll-panel-x flex h-36 gap-3">
+            {sorted.map((item) => (
+              <ItemCard key={item.id} item={item} onToggle={onToggle} onOpen={onOpen} />
+            ))}
+          </ul>
+        )}
+      </section>
+    );
+  }
+
   return (
-    <section className="flex min-w-0 flex-col gap-3" aria-label={KIND_LABELS[kind]}>
+    <section
+      className="flex min-w-0 flex-col gap-3 md:min-h-0 md:flex-1"
+      aria-label={KIND_LABELS[kind]}
+    >
       <div className="flex items-center gap-2">
         <h2 className="font-display text-lg text-default">{KIND_LABELS[kind]}</h2>
         {pending > 0 && <span className="badge-count">{pending}</span>}
         {titleAction}
       </div>
 
-      <div className={horizontal ? "md:max-w-md" : undefined}>
-        <AddForm kind={kind} onAdd={onAdd} />
-      </div>
+      <AddForm kind={kind} onAdd={onAdd} />
 
       {loading ? (
-        horizontal ? (
-          <div className="flex gap-3" aria-hidden="true">
-            <div className="skeleton h-24 w-56 flex-none" />
-            <div className="skeleton h-24 w-56 flex-none" style={{ animationDelay: "150ms" }} />
-            <div className="skeleton h-24 w-56 flex-none" style={{ animationDelay: "300ms" }} />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2" aria-hidden="true">
-            <div className="skeleton h-14" />
-            <div className="skeleton h-14" style={{ animationDelay: "150ms" }} />
-            <div className="skeleton h-14" style={{ animationDelay: "300ms" }} />
-          </div>
-        )
+        <div className="flex flex-col gap-2" aria-hidden="true">
+          <div className="skeleton h-14 flex-none" />
+          <div className="skeleton h-14 flex-none" style={{ animationDelay: "150ms" }} />
+          <div className="skeleton h-14 flex-none" style={{ animationDelay: "300ms" }} />
+        </div>
       ) : sorted.length === 0 ? (
         <div className="empty-state">
           <p className="font-display text-default">{EMPTY_COPY[kind].title}</p>
           <p className="text-sm text-muted">{EMPTY_COPY[kind].help}</p>
         </div>
-      ) : horizontal ? (
-        <ul className="flex gap-3 overflow-x-auto pb-2">
-          {sorted.map((item) => (
-            <ItemCard key={item.id} item={item} onToggle={onToggle} onOpen={onOpen} />
-          ))}
-        </ul>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2 md:min-h-0 md:flex-1 md:scroll-panel">
           {sorted.map((item) => (
             <ItemRow key={item.id} item={item} onToggle={onToggle} onOpen={onOpen} />
           ))}

@@ -930,3 +930,45 @@
 @media (width < 768px) {
   input, select, textarea { font-size: 16px; }
 }
+
+/* ============================================================
+   Extensiones del proyecto radar-personal (aprobadas por Beto,
+   2026-08-13 — documentadas también en DESIGN.md).
+   ============================================================ */
+
+/* Intercambio de zonas del layout: View Transitions. El navegador anima
+   el movimiento de cada zona a su nueva posición usando los tokens de
+   motion del tema. Se desactiva si el usuario pide menos movimiento. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(*) {
+    animation-duration: var(--motion-duration);
+    animation-timing-function: var(--motion-easing);
+  }
+}
+
+/* Panel con scroll interno (zonas de altura fija del layout de iPad).
+   Barra siempre reservada, pintada con tokens del tema. */
+@utility scroll-panel {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+  &::-webkit-scrollbar { width: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--c-border);
+    border-radius: var(--radius-full);
+  }
+  &::-webkit-scrollbar-thumb:hover { background-color: var(--c-text-muted); }
+}
+@utility scroll-panel-x {
+  overflow-x: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+  &::-webkit-scrollbar { height: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--c-border);
+    border-radius: var(--radius-full);
+  }
+  &::-webkit-scrollbar-thumb:hover { background-color: var(--c-text-muted); }
+}

@@ -46,7 +46,7 @@ export default function ItemRow({
   const noteFirstLine = item.note?.split("\n")[0]?.trim();
 
   return (
-    <li className={`list-row ${dimmed ? "opacity-60" : ""}`}>
+    <li className={`list-row flex-none ${dimmed ? "opacity-60" : ""}`}>
       {!isDate && <CheckCircle item={item} onToggle={onToggle} />}
 
       <button

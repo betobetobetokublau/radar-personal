@@ -14,9 +14,12 @@ const PLACEHOLDERS: Record<Kind, string> = {
 export default function AddForm({
   kind,
   onAdd,
+  inline = false,
 }: {
   kind: Kind;
   onAdd: (draft: NewItem) => Promise<boolean>;
+  /** true → todo en un solo renglón (título de la fila horizontal). */
+  inline?: boolean;
 }) {
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -37,6 +40,61 @@ export default function AddForm({
     }
   }
 
+  const submitButton = (
+    <button
+      type="submit"
+      className="btn-primary grid h-11 w-11 flex-none place-items-center p-0"
+      aria-label="Agregar"
+      disabled={!valid || saving}
+      data-loading={saving}
+    >
+      {saving ? (
+        <span className="spinner" aria-hidden="true" />
+      ) : (
+        <Plus size={20} strokeWidth={1.75} aria-hidden="true" />
+      )}
+    </button>
+  );
+
+  const titleInput = (
+    <input
+      className="input-default min-w-0 flex-1"
+      placeholder={PLACEHOLDERS[kind]}
+      aria-label={PLACEHOLDERS[kind]}
+      value={title}
+      required
+      maxLength={500}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+  );
+
+  const dateInput = (
+    <input
+      type="date"
+      className={`input-default ${inline ? "w-40 flex-none" : "min-w-0 flex-1"}`}
+      aria-label="Fecha del evento"
+      value={dueDate}
+      required
+      onChange={(e) => setDueDate(e.target.value)}
+    />
+  );
+
+  if (inline) {
+    return (
+      <form
+        className="flex min-w-0 flex-1 items-center gap-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void submit();
+        }}
+      >
+        {titleInput}
+        {kind === "date" && dateInput}
+        {submitButton}
+      </form>
+    );
+  }
+
   return (
     <form
       className="flex flex-col gap-2"
@@ -46,55 +104,14 @@ export default function AddForm({
       }}
     >
       <div className="flex gap-2">
-        <input
-          className="input-default min-w-0 flex-1"
-          placeholder={PLACEHOLDERS[kind]}
-          aria-label={PLACEHOLDERS[kind]}
-          value={title}
-          required
-          maxLength={500}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        {kind !== "date" && (
-          <button
-            type="submit"
-            className="btn-primary grid h-11 w-11 flex-none place-items-center p-0"
-            aria-label="Agregar"
-            disabled={!valid || saving}
-            data-loading={saving}
-          >
-            {saving ? (
-              <span className="spinner" aria-hidden="true" />
-            ) : (
-              <Plus size={20} strokeWidth={1.75} aria-hidden="true" />
-            )}
-          </button>
-        )}
+        {titleInput}
+        {kind !== "date" && submitButton}
       </div>
 
       {kind === "date" && (
         <div className="flex gap-2">
-          <input
-            type="date"
-            className="input-default min-w-0 flex-1"
-            aria-label="Fecha del evento"
-            value={dueDate}
-            required
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="btn-primary grid h-11 w-11 flex-none place-items-center p-0"
-            aria-label="Agregar"
-            disabled={!valid || saving}
-            data-loading={saving}
-          >
-            {saving ? (
-              <span className="spinner" aria-hidden="true" />
-            ) : (
-              <Plus size={20} strokeWidth={1.75} aria-hidden="true" />
-            )}
-          </button>
+          {dateInput}
+          {submitButton}
         </div>
       )}
     </form>

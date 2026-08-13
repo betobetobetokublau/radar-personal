@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { CalendarDays, FolderKanban, ListTodo } from "lucide-react";
 import type { Item, Kind } from "@/lib/types";
 import { KIND_LABELS } from "@/lib/types";
@@ -32,8 +33,31 @@ const NAV_ICONS: Record<Kind, typeof ListTodo> = {
 // Borde sutil que delinea cada zona del layout (solo ≥768px; el celular
 // conserva su vista de pestañas sin contenedores). La zona NO lleva fondo:
 // las tarjetas de adentro ya son surface y perderían contraste tono-sobre-tono.
+// min-h-0 + flex-col permiten que la lista interna scrollee sin estirar la zona.
 const ZONE_CLASS =
-  "border-default min-w-0 rounded-[var(--radius-lg)] md:border md:p-4";
+  "border-default min-w-0 rounded-[var(--radius-lg)] md:flex md:min-h-0 md:flex-col md:border md:p-4";
+
+// Anima el intercambio de zonas con la View Transitions API: el navegador
+// "vuela" cada zona a su nueva posición (tokens de motion en globals.css).
+// Sin soporte del navegador, o con "reducir movimiento" activo, el cambio
+// es instantáneo — mismo resultado, sin animación.
+function withViewTransition(update: () => void) {
+  const doc = document as Document & {
+    startViewTransition?: (cb: () => void) => unknown;
+  };
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  if (!doc.startViewTransition || reduceMotion) {
+    update();
+    return;
+  }
+  doc.startViewTransition(() => {
+    // La actualización debe aplicarse al DOM de forma síncrona para que el
+    // navegador capture el "después" dentro de la transición.
+    flushSync(update);
+  });
+}
 
 // useLayoutEffect corre ANTES del primer pintado (evita el brinco visual al
 // restaurar el acomodo guardado), pero en el servidor no existe — ahí cae a
@@ -62,24 +86,24 @@ export default function Panel() {
   const dismissToast = useCallback(() => setToast(null), []);
 
   function changeMode(next: LayoutMode) {
-    setMode(next);
+    if (next === mode) return;
     saveLayoutMode(next);
     // Las zonas de `next` ya traen su última asignación (o el default) —
     // viven en `assignments`, que persiste por layout.
+    withViewTransition(() => setMode(next));
   }
 
   // Asigna la lista `kind` a la zona `zoneIndex` del layout actual.
-  // Si otra zona ya mostraba esa lista, se intercambian.
+  // Si otra zona ya mostraba esa lista, se intercambian (animado).
   function assignList(zoneIndex: number, kind: Kind) {
-    setAssignments((prev) => {
-      const zones = [...prev[mode]];
-      const from = zones.indexOf(kind);
-      const displaced = zones[zoneIndex];
-      zones[zoneIndex] = kind;
-      if (from >= 0 && from !== zoneIndex) zones[from] = displaced;
-      saveAssignment(mode, zones);
-      return { ...prev, [mode]: zones };
-    });
+    const zones = [...assignments[mode]];
+    const from = zones.indexOf(kind);
+    const displaced = zones[zoneIndex];
+    zones[zoneIndex] = kind;
+    if (from >= 0 && from !== zoneIndex) zones[from] = displaced;
+    saveAssignment(mode, zones);
+    const next = { ...assignments, [mode]: zones };
+    withViewTransition(() => setAssignments(next));
   }
 
   // Tachar es reversible → se hace de inmediato y se ofrece "Deshacer" 7s.
@@ -148,7 +172,10 @@ export default function Panel() {
         </div>
       </Header>
 
-      <main className="page has-bottom-nav">
+      {/* En md+ el panel llena exactamente la pantalla (alto fijo, sin scroll
+          de página): las zonas mantienen siempre la misma altura y el scroll
+          vive DENTRO de cada una. */}
+      <main className="page has-bottom-nav md:h-[calc(100dvh_-_var(--header-height))] md:overflow-hidden">
         <InstallHint />
 
         {error && (
@@ -171,23 +198,36 @@ export default function Panel() {
 
         {/* Pantalla grande (iPad de pared / escritorio): zonas con borde. */}
         {mode === "3v" ? (
-          <div className="hidden md:grid md:grid-cols-3 md:items-start md:gap-5">
+          <div className="hidden md:grid md:min-h-0 md:flex-1 md:grid-cols-3 md:gap-5">
             {[0, 1, 2].map((i) => (
-              <div key={i} className={ZONE_CLASS}>
+              <div
+                key={i}
+                className={ZONE_CLASS}
+                style={{ viewTransitionName: `zona-${assignments[mode][i]}` }}
+              >
                 {zoneColumn(i, false)}
               </div>
             ))}
           </div>
         ) : (
-          <div className="hidden md:flex md:flex-col md:gap-5">
-            <div className="md:grid md:grid-cols-2 md:items-start md:gap-5">
+          <div className="hidden md:flex md:min-h-0 md:flex-1 md:flex-col md:gap-5">
+            <div className="md:grid md:min-h-0 md:flex-1 md:grid-cols-2 md:gap-5">
               {[0, 1].map((i) => (
-                <div key={i} className={ZONE_CLASS}>
+                <div
+                  key={i}
+                  className={ZONE_CLASS}
+                  style={{ viewTransitionName: `zona-${assignments[mode][i]}` }}
+                >
                   {zoneColumn(i, false)}
                 </div>
               ))}
             </div>
-            <div className={ZONE_CLASS}>{zoneColumn(2, true)}</div>
+            <div
+              className={`${ZONE_CLASS} md:flex-none`}
+              style={{ viewTransitionName: `zona-${assignments[mode][2]}` }}
+            >
+              {zoneColumn(2, true)}
+            </div>
           </div>
         )}
       </main>

@@ -42,6 +42,63 @@ export function useItems() {
     void refresh();
   }, [refresh]);
 
+  // Tiempo real: el panel se actualiza solo cuando la tabla cambia desde
+  // cualquier otro dispositivo (el iPad de la pared se entera de lo que
+  // agregas en el celular). Con RLS, solo llegan cambios de TUS filas.
+  useEffect(() => {
+    let cancelled = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    void (async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user || cancelled) return;
+
+      channel = supabase
+        .channel("items-realtime")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "items",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            if (payload.eventType === "INSERT") {
+              const row = payload.new as Item;
+              // Los agregados desde ESTA pantalla ya están en el estado —
+              // se dedupe por id para no duplicarlos.
+              setItems((prev) =>
+                prev.some((it) => it.id === row.id) ? prev : [row, ...prev]
+              );
+            } else if (payload.eventType === "UPDATE") {
+              const row = payload.new as Item;
+              setItems((prev) =>
+                prev.map((it) => (it.id === row.id ? row : it))
+              );
+            } else if (payload.eventType === "DELETE") {
+              const oldRow = payload.old as { id?: string };
+              if (oldRow.id) {
+                setItems((prev) => prev.filter((it) => it.id !== oldRow.id));
+              }
+            }
+          }
+        )
+        .subscribe((status) => {
+          // Al (re)conectar el canal, resincroniza por si algo cambió
+          // mientras no había conexión (WiFi caído, iPad dormido, etc.).
+          if (status === "SUBSCRIBED") void refresh();
+        });
+    })();
+
+    return () => {
+      cancelled = true;
+      if (channel) void supabase.removeChannel(channel);
+    };
+  }, [supabase, refresh]);
+
   /** Agrega un ítem. Devuelve true si se guardó. */
   const add = useCallback(
     async (draft: NewItem): Promise<boolean> => {

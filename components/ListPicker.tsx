@@ -88,7 +88,6 @@ export default function ListPicker({
         ref={triggerRef}
         type="button"
         className="icon-btn"
-        data-plain="true"
         aria-label={`Cambiar la lista de esta zona (ahora: ${KIND_LABELS[current]})`}
         aria-haspopup="menu"
         aria-expanded={open}

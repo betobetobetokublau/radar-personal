@@ -125,3 +125,23 @@ Todos medidos: el par de texto más bajo de v1.1 es 4.52:1.
 - Nunca borrar sin confirmar, y nunca con el foco puesto en el botón peligroso.
 - Nunca dos librerías de iconos en la misma app.
 - Nunca un ícono decorativo junto a un título.
+
+## Extensiones del proyecto radar-personal (aprobadas 2026-08-13)
+
+Patrones agregados a petición del dueño, implementados 100% con tokens
+existentes (ver el bloque "Extensiones" al final de `app/globals.css`):
+
+- **Intercambio de zonas animado**: al cambiar de acomodo o intercambiar
+  listas entre zonas del layout de iPad, se usa la View Transitions API
+  (cada zona "viaja" a su nueva posición). Duración y easing salen de
+  `--motion-duration` / `--motion-easing`. Con `prefers-reduced-motion:
+  reduce` el cambio es instantáneo. En navegadores sin soporte, cae a
+  cambio instantáneo sin error.
+- **`scroll-panel` / `scroll-panel-x`**: scroll interno de las zonas de
+  altura fija del layout (vertical y horizontal). Barra delgada (8px)
+  pintada con `--c-border` (hover `--c-text-muted`), track transparente,
+  espacio de barra siempre reservado para que el layout no brinque.
+- **Zonas del layout**: contenedores con borde sutil (`--c-border`,
+  `--radius-lg`), SIN fondo propio (las tarjetas internas ya son surface),
+  y de altura fija — llenan el alto de la pantalla y el contenido scrollea
+  adentro; el borde nunca se "acorta" con listas cortas.
