@@ -8,6 +8,9 @@ const OTP_LENGTH = 6; // Debe coincidir con "Email OTP length" en Supabase.
 
 function friendlyAuthError(message: string): string {
   const msg = message.toLowerCase();
+  if (msg.includes("invalid login credentials")) {
+    return "Correo o contraseña incorrectos.";
+  }
   if (msg.includes("rate limit")) {
     return "Se alcanzó el límite de correos por hora. No es una falla de la app: el correo de prueba de Supabase solo manda ~2 por hora. Espera un rato e intenta de nuevo.";
   }
@@ -25,14 +28,35 @@ export default function LoginPage() {
   const supabase = useRef<ReturnType<typeof createClient> | null>(null);
   if (!supabase.current) supabase.current = createClient();
 
-  const [step, setStep] = useState<"email" | "code">("email");
+  const [step, setStep] = useState<"email" | "code" | "password">("email");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [sending, setSending] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const boxRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Entrada con contraseña: alternativa al código por correo mientras el
+  // correo transaccional (Resend) no esté conectado. Auth estándar de
+  // Supabase — mismo candado de allowlist, mismo RLS.
+  async function signInWithPassword() {
+    if (!email.trim() || !password) return;
+    setVerifying(true);
+    setError(null);
+    const { error: err } = await supabase.current!.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
+    setVerifying(false);
+    if (err) {
+      setError(friendlyAuthError(err.message));
+      return;
+    }
+    router.replace("/");
+    router.refresh();
+  }
 
   async function sendCode(): Promise<boolean> {
     setSending(true);
@@ -149,8 +173,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <p className="help-text">
-                Te mandamos un código de {OTP_LENGTH} dígitos para entrar. Sin
-                contraseñas.
+                Te mandamos un código de {OTP_LENGTH} dígitos para entrar.
               </p>
             </div>
             {error && <p className="error-text">{error}</p>}
@@ -161,6 +184,77 @@ export default function LoginPage() {
               data-loading={sending}
             >
               {sending ? "Enviando…" : "Mandarme el código"}
+            </button>
+            <button
+              type="button"
+              className="btn-tertiary min-h-12 w-full"
+              onClick={() => {
+                setStep("password");
+                setError(null);
+                setNotice(null);
+              }}
+            >
+              Entrar con contraseña
+            </button>
+          </form>
+        ) : step === "password" ? (
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void signInWithPassword();
+            }}
+          >
+            <div className="flex flex-col gap-1">
+              <label className="label-default" htmlFor="email-pw">
+                Tu correo
+              </label>
+              <input
+                id="email-pw"
+                type="email"
+                required
+                autoComplete="email"
+                className="input-default"
+                placeholder="tu@correo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="label-default" htmlFor="password">
+                Contraseña
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                autoComplete="current-password"
+                autoFocus
+                className="input-default"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {error && <p className="error-text">{error}</p>}
+            <button
+              type="submit"
+              className="btn-primary min-h-12 w-full"
+              disabled={verifying}
+              data-loading={verifying}
+            >
+              {verifying ? "Entrando…" : "Entrar"}
+            </button>
+            <button
+              type="button"
+              className="btn-tertiary min-h-12 w-full"
+              disabled={verifying}
+              onClick={() => {
+                setStep("email");
+                setPassword("");
+                setError(null);
+              }}
+            >
+              Volver al código por correo
             </button>
           </form>
         ) : (
