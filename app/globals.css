@@ -59,131 +59,24 @@
   :root { --motion-duration: 0ms; }
 }
 
-/* Cálida / personal */
-[data-theme="calida"] {
-  --c-series-1: #B4552F;
-  --c-series-2: #D98452;
-  --c-series-3: #E6B389;
-  --c-series-4: #7A4A33;
-  --c-bg: #FDF8F3;
+/* Radar / branding propio — derivado del logo (la "B" carbón azulado).
+   Un solo acento protagonista (#3C464A, el color exacto del logo) + neutros
+   fríos de la misma familia. Todos los pares texto/fondo verificados
+   WCAG AA por script el 2026-08-13 (mínimo 5.35:1). */
+[data-theme="radar"] {
+  --c-series-1: #3C464A;
+  --c-series-2: #64757D;
+  --c-series-3: #97A6AD;
+  --c-series-4: #232B2F;
+  --c-bg: #F5F7F8;
   --c-surface: #FFFFFF;
-  --c-border: #EADDD1;
-  --c-text: #3B2E28;
-  --c-text-muted: #7A675C;
-  --c-accent: #B4552F;
-  --c-accent-hover: #99441F;
-  --c-on-accent: #FFF8F3;
-  --c-accent-ring: rgba(180,85,47,0.22);
-  --c-success: #2F7A5A;
-  --c-success-bg: #E6F2EC;
-  --c-on-success-bg: #1E5C41;
-  --c-warning: #9A6B12;
-  --c-warning-bg: #FBF0DC;
-  --c-on-warning-bg: #6E4B08;
-  --c-error: #B03A2B;
-  --c-error-bg: #FBE9E5;
-  --c-on-error-bg: #86281C;
-  --font-display: "Lora", serif;
-  --font-body: "Nunito Sans", sans-serif;
-  --weight-display: 600;
-}
-[data-theme="calida"].dark, [data-theme="calida"][data-mode="dark"] {
-  --c-series-1: #E7906A;
-  --c-series-2: #C4714C;
-  --c-series-3: #F4C0A4;
-  --c-series-4: #A2593B;
-  --c-bg: #1C1614;
-  --c-surface: #251E1B;
-  --c-border: #3A302C;
-  --c-text: #F2E9E2;
-  --c-text-muted: #B4A29A;
-  --c-accent: #E7906A;
-  --c-accent-hover: #F2A783;
-  --c-on-accent: #2A1509;
-  --c-accent-ring: rgba(231,144,106,0.28);
-  --c-success: #6FCFA3;
-  --c-success-bg: #17332A;
-  --c-on-success-bg: #A8E6C8;
-  --c-warning: #E0B457;
-  --c-warning-bg: #33290F;
-  --c-on-warning-bg: #F0D592;
-  --c-error: #F08876;
-  --c-error-bg: #3A1B16;
-  --c-on-error-bg: #F8B6A9;
-  --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
-  --shadow-2: 0 4px 14px rgba(0,0,0,0.55);
-}
-
-/* Fresca / juguetona */
-[data-theme="fresca"] {
-  --c-series-1: #1B62F0;
-  --c-series-2: #5B8DF7;
-  --c-series-3: #9CB8FB;
-  --c-series-4: #123F9B;
-  --c-bg: #F4F8FF;
-  --c-surface: #FFFFFF;
-  --c-border: #D8E3F7;
-  --c-text: #14213D;
-  --c-text-muted: #5A6B8C;
-  --c-accent: #1B62F0;
-  --c-accent-hover: #0E4CC7;
+  --c-border: #DBE1E5;
+  --c-text: #1C2429;
+  --c-text-muted: #5A6871;
+  --c-accent: #3C464A;
+  --c-accent-hover: #2A3236;
   --c-on-accent: #FFFFFF;
-  --c-accent-ring: rgba(27,98,240,0.22);
-  --c-success: #12855F;
-  --c-success-bg: #DFF5EC;
-  --c-on-success-bg: #0B6247;
-  --c-warning: #8E6008;
-  --c-warning-bg: #FDF0D8;
-  --c-on-warning-bg: #7A4F04;
-  --c-error: #CF3535;
-  --c-error-bg: #FDE8E8;
-  --c-on-error-bg: #9E2626;
-  --font-display: "Baloo 2", sans-serif;
-  --font-body: "Nunito", sans-serif;
-  --weight-display: 700;
-}
-[data-theme="fresca"].dark, [data-theme="fresca"][data-mode="dark"] {
-  --c-series-1: #79A6FF;
-  --c-series-2: #4E7FDD;
-  --c-series-3: #ADC7FF;
-  --c-series-4: #2E5AA8;
-  --c-bg: #0D1424;
-  --c-surface: #16203A;
-  --c-border: #26314F;
-  --c-text: #E8EEFB;
-  --c-text-muted: #9AA9C6;
-  --c-accent: #79A6FF;
-  --c-accent-hover: #9CBEFF;
-  --c-on-accent: #06122B;
-  --c-accent-ring: rgba(121,166,255,0.28);
-  --c-success: #57D6A6;
-  --c-success-bg: #0F2E26;
-  --c-on-success-bg: #9AEBCB;
-  --c-warning: #E8BE5E;
-  --c-warning-bg: #2E260F;
-  --c-on-warning-bg: #F3DA9C;
-  --c-error: #FF8A80;
-  --c-error-bg: #351616;
-  --c-on-error-bg: #FFB8B0;
-  --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
-  --shadow-2: 0 4px 14px rgba(0,0,0,0.55);
-}
-
-/* Seria / confiable */
-[data-theme="seria"] {
-  --c-series-1: #1C4E80;
-  --c-series-2: #4A7BAE;
-  --c-series-3: #86A9CE;
-  --c-series-4: #12345A;
-  --c-bg: #F6F8FA;
-  --c-surface: #FFFFFF;
-  --c-border: #DCE2E9;
-  --c-text: #16202B;
-  --c-text-muted: #566472;
-  --c-accent: #1C4E80;
-  --c-accent-hover: #163C63;
-  --c-on-accent: #FFFFFF;
-  --c-accent-ring: rgba(28,78,128,0.22);
+  --c-accent-ring: rgba(60,70,74,0.22);
   --c-success: #16704F;
   --c-success-bg: #E4F1EB;
   --c-on-success-bg: #0E5239;
@@ -193,24 +86,24 @@
   --c-error: #A93226;
   --c-error-bg: #F9E7E5;
   --c-on-error-bg: #7E2119;
-  --font-display: "Libre Franklin", sans-serif;
-  --font-body: "IBM Plex Sans", sans-serif;
-  --weight-display: 600;
+  --font-display: "Archivo", sans-serif;
+  --font-body: "Instrument Sans", sans-serif;
+  --weight-display: 700;
 }
-[data-theme="seria"].dark, [data-theme="seria"][data-mode="dark"] {
-  --c-series-1: #74A9E0;
-  --c-series-2: #4E80B5;
-  --c-series-3: #A6C8EE;
-  --c-series-4: #2F5A80;
-  --c-bg: #0E141B;
-  --c-surface: #172029;
-  --c-border: #26313D;
-  --c-text: #E7ECF2;
-  --c-text-muted: #98A5B3;
-  --c-accent: #74A9E0;
-  --c-accent-hover: #93BEEC;
-  --c-on-accent: #08131F;
-  --c-accent-ring: rgba(116,169,224,0.28);
+[data-theme="radar"].dark, [data-theme="radar"][data-mode="dark"] {
+  --c-series-1: #A9BEC7;
+  --c-series-2: #7A929C;
+  --c-series-3: #C9D7DC;
+  --c-series-4: #55707B;
+  --c-bg: #101517;
+  --c-surface: #191F22;
+  --c-border: #2B343A;
+  --c-text: #E7ECEE;
+  --c-text-muted: #97A5AC;
+  --c-accent: #A9BEC7;
+  --c-accent-hover: #BFD1D8;
+  --c-on-accent: #0D1418;
+  --c-accent-ring: rgba(169,190,199,0.28);
   --c-success: #5CC49B;
   --c-success-bg: #10291F;
   --c-on-success-bg: #9BDFC4;
@@ -223,62 +116,6 @@
   --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-2: 0 4px 14px rgba(0,0,0,0.55);
 }
-
-/* Editorial / con carácter */
-[data-theme="editorial"] {
-  --c-series-1: #191817;
-  --c-series-2: #55524C;
-  --c-series-3: #918B81;
-  --c-series-4: #C4BEB3;
-  --c-bg: #FBFAF7;
-  --c-surface: #FFFFFF;
-  --c-border: #E4DFD5;
-  --c-text: #191817;
-  --c-text-muted: #6B665C;
-  --c-accent: #191817;
-  --c-accent-hover: #000000;
-  --c-on-accent: #FBFAF7;
-  --c-accent-ring: rgba(25,24,23,0.18);
-  --c-success: #2C6B4F;
-  --c-success-bg: #E8F1EB;
-  --c-on-success-bg: #1D5039;
-  --c-warning: #8A6410;
-  --c-warning-bg: #F7EFDB;
-  --c-on-warning-bg: #644909;
-  --c-error: #B03A2B;
-  --c-error-bg: #F9E8E4;
-  --c-on-error-bg: #85261B;
-  --font-display: "Instrument Serif", serif;
-  --font-body: "Work Sans", sans-serif;
-  --weight-display: 400;
-}
-[data-theme="editorial"].dark, [data-theme="editorial"][data-mode="dark"] {
-  --c-series-1: #F2F0EA;
-  --c-series-2: #B9B4AA;
-  --c-series-3: #857F76;
-  --c-series-4: #514C45;
-  --c-bg: #141412;
-  --c-surface: #1D1D1A;
-  --c-border: #33322D;
-  --c-text: #F2F0EA;
-  --c-text-muted: #A8A39A;
-  --c-accent: #F2F0EA;
-  --c-accent-hover: #FFFFFF;
-  --c-on-accent: #141412;
-  --c-accent-ring: rgba(242,240,234,0.22);
-  --c-success: #63C79A;
-  --c-success-bg: #12291F;
-  --c-on-success-bg: #A2E2C3;
-  --c-warning: #DDB667;
-  --c-warning-bg: #2A2411;
-  --c-on-warning-bg: #EFD8A0;
-  --c-error: #EF8B79;
-  --c-error-bg: #331915;
-  --c-on-error-bg: #F8B7AB;
-  --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
-  --shadow-2: 0 4px 14px rgba(0,0,0,0.55);
-}
-
 /* Utilidades semánticas — se usan igual en las 4 variantes */
 @utility bg-app { background-color: var(--c-bg); }
 @utility bg-surface { background-color: var(--c-surface); }
@@ -452,92 +289,27 @@
 
 /* --- tokens nuevos por variante (8 por modo) --- */
 
-/* Cálida / personal — Azul polvoso: el único color que no sale del acento, porque “info” en barro se leería como aviso. */
-[data-theme="calida"] {
-  --c-info: #2F6E96;
-  --c-info-bg: #E6EEF2;
-  --c-on-info-bg: #2F6E96;
-  --c-overlay: rgba(12,10,8,0.45);
-  --c-avatar-1: #F2E0DA;
-  --c-avatar-2: #F8E9E0;
-  --c-avatar-3: #FBF1EA;
-  --c-avatar-4: #E7DEDA;
+/* Radar — Info = el acento (en una herramienta de trabajo, dos tonos
+   parecidos confunden más de lo que ayudan; regla heredada de "seria"). */
+[data-theme="radar"] {
+  --c-info: #3C464A;
+  --c-info-bg: #E8ECEE;
+  --c-on-info-bg: #3C464A;
+  --c-overlay: rgba(12,13,14,0.45);
+  --c-avatar-1: #D9E0E3;
+  --c-avatar-2: #E2E8EB;
+  --c-avatar-3: #ECF1F3;
+  --c-avatar-4: #D3DBDF;
 }
-[data-theme="calida"].dark, [data-theme="calida"][data-mode="dark"] {
-  --c-info: #8FC4E4;
-  --c-info-bg: #2E3235;
-  --c-on-info-bg: #8FC4E4;
+[data-theme="radar"].dark, [data-theme="radar"][data-mode="dark"] {
+  --c-info: #A9BEC7;
+  --c-info-bg: #202B31;
+  --c-on-info-bg: #A9BEC7;
   --c-overlay: rgba(0,0,0,0.7);
-  --c-avatar-1: #634234;
-  --c-avatar-2: #58392B;
-  --c-avatar-3: #675247;
-  --c-avatar-4: #4D3125;
-}
-
-/* Fresca / juguetona — El acento ya es azul: info se deriva de él en vez de meter un color nuevo. */
-[data-theme="fresca"] {
-  --c-info: #1B62F0;
-  --c-info-bg: #E4ECFD;
-  --c-on-info-bg: #1A60EB;
-  --c-overlay: rgba(12,10,8,0.45);
-  --c-avatar-1: #D6E3FC;
-  --c-avatar-2: #E1EAFE;
-  --c-avatar-3: #EDF2FE;
-  --c-avatar-4: #D4DCED;
-}
-[data-theme="fresca"].dark, [data-theme="fresca"][data-mode="dark"] {
-  --c-info: #79A6FF;
-  --c-info-bg: #1E2B47;
-  --c-on-info-bg: #79A6FF;
-  --c-overlay: rgba(0,0,0,0.7);
-  --c-avatar-1: #364B79;
-  --c-avatar-2: #283E6E;
-  --c-avatar-3: #465579;
-  --c-avatar-4: #1E335D;
-}
-
-/* Seria / confiable — Info = el acento. En una herramienta de trabajo, dos azules distintos confunden. */
-[data-theme="seria"] {
-  --c-info: #1C4E80;
-  --c-info-bg: #E4EAF0;
-  --c-on-info-bg: #1C4E80;
-  --c-overlay: rgba(12,10,8,0.45);
-  --c-avatar-1: #D6DFE8;
-  --c-avatar-2: #DEE7F0;
-  --c-avatar-3: #E9F0F6;
-  --c-avatar-4: #D4DAE1;
-}
-[data-theme="seria"].dark, [data-theme="seria"][data-mode="dark"] {
-  --c-info: #74A9E0;
-  --c-info-bg: #1E2C3B;
-  --c-on-info-bg: #74A9E0;
-  --c-overlay: rgba(0,0,0,0.7);
-  --c-avatar-1: #354C64;
-  --c-avatar-2: #293F56;
-  --c-avatar-3: #455668;
-  --c-avatar-4: #1F3345;
-}
-
-/* Editorial / con carácter — Editorial no admite azul (su anti-pattern lo prohíbe): info es tinta gris, y se distingue del badge neutro porque va relleno, no en outline. */
-[data-theme="editorial"] {
-  --c-info: #55524C;
-  --c-info-bg: #EBEAEA;
-  --c-on-info-bg: #55524C;
-  --c-overlay: rgba(12,10,8,0.45);
-  --c-avatar-1: #D6D5D5;
-  --c-avatar-2: #E0E0DF;
-  --c-avatar-3: #EBEAE8;
-  --c-avatar-4: #F4F3F1;
-}
-[data-theme="editorial"].dark, [data-theme="editorial"][data-mode="dark"] {
-  --c-info: #B9B4AA;
-  --c-info-bg: #2E2E2A;
-  --c-on-info-bg: #B9B4AA;
-  --c-overlay: rgba(0,0,0,0.7);
-  --c-avatar-1: #61615D;
-  --c-avatar-2: #4F4D48;
-  --c-avatar-3: #3E3C37;
-  --c-avatar-4: #2E2C28;
+  --c-avatar-1: #3D5058;
+  --c-avatar-2: #33454C;
+  --c-avatar-3: #49575E;
+  --c-avatar-4: #263339;
 }
 
 /* --- capas: una sola fuente de verdad para el apilamiento --- */

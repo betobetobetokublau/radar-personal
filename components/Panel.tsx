@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import { CalendarDays, FolderKanban, ListTodo } from "lucide-react";
 import type { Item, Kind } from "@/lib/types";
 import { KIND_LABELS } from "@/lib/types";
 import { useItems } from "@/lib/useItems";
@@ -17,18 +16,13 @@ import {
 import Header from "@/components/Header";
 import InstallHint from "@/components/InstallHint";
 import Column from "@/components/Column";
+import { KIND_ICONS } from "@/components/kindIcons";
 import ListPicker from "@/components/ListPicker";
 import EditSheet from "@/components/EditSheet";
 import ConfirmDialog from "@/components/ConfirmDialog";
 import Toast, { type ToastData } from "@/components/Toast";
 
 const KINDS: Kind[] = ["task", "date", "project"];
-
-const NAV_ICONS: Record<Kind, typeof ListTodo> = {
-  task: ListTodo,
-  date: CalendarDays,
-  project: FolderKanban,
-};
 
 // Borde sutil que delinea cada zona del layout (solo ≥768px; el celular
 // conserva su vista de pestañas sin contenedores). La zona NO lleva fondo:
@@ -234,7 +228,7 @@ export default function Panel() {
 
       <nav className="bottom-nav" aria-label="Secciones">
         {KINDS.map((kind) => {
-          const Icon = NAV_ICONS[kind];
+          const Icon = KIND_ICONS[kind];
           return (
             <button
               key={kind}

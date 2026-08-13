@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
-// Los colores vienen de los tokens del tema "seria" (app/globals.css):
-// --c-accent y --c-bg. El manifest es JSON estático — no puede leer CSS.
+// Colores = tokens del tema "radar" (app/globals.css): --c-accent y --c-bg.
+// El manifest es JSON estático — no puede leer variables CSS.
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Radar Personal",
@@ -9,13 +9,13 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Tareas, fechas importantes y proyectos — siempre a la mano",
     start_url: "/",
     display: "standalone",
-    background_color: "#F6F8FA",
-    theme_color: "#1C4E80",
+    background_color: "#F5F7F8",
+    theme_color: "#3C464A",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/logo-512.png",
+        sizes: "512x512",
+        type: "image/png",
         purpose: "any",
       },
     ],

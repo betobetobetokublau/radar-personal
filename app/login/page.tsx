@@ -114,9 +114,14 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-6 p-4">
-      <div className="flex flex-col items-center gap-1">
-        <h1 className="font-display text-2xl text-default">Radar Personal</h1>
-        <p className="text-sm text-muted">Tu panel, siempre a la mano.</p>
+      <div className="flex flex-col items-center gap-3">
+        {/* eslint-disable-next-line @next/next/no-img-element -- logo local
+            estático, no amerita el pipeline de next/image */}
+        <img src="/logo.png" alt="" aria-hidden="true" className="h-14 w-auto" />
+        <div className="flex flex-col items-center gap-1">
+          <h1 className="font-display text-2xl text-default">Radar Personal</h1>
+          <p className="text-sm text-muted">Tu panel, siempre a la mano.</p>
+        </div>
       </div>
 
       <div className="card flex w-full max-w-sm flex-col gap-4 p-4 md:p-6">

@@ -1,15 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Libre_Franklin, IBM_Plex_Sans } from "next/font/google";
+import { Archivo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-const display = Libre_Franklin({
+// Branding propio (2026-08-13): Archivo para display (grotesca geométrica,
+// misma sangre que la "B" del logo) e Instrument Sans para texto.
+const display = Archivo({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = IBM_Plex_Sans({
+const body = Instrument_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-body",
@@ -42,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      data-theme="seria"
+      data-theme="radar"
       className={`${display.variable} ${body.variable}`}
       suppressHydrationWarning
     >

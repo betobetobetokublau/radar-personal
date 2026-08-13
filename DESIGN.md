@@ -1,147 +1,148 @@
-# DESIGN.md — tema base "seria" (Seria / confiable)
+# Design System — Radar Personal
 
-> Punto de partida generado por raicode. No es identidad final: si el usuario
-> corre su branding, este archivo se reemplaza completo.
+> Contrato de diseño del proyecto. Generado por /design-consultation el
+> 2026-08-13, anclado al logo del proyecto (`public/logo.png`). Reemplaza al
+> tema de arranque "Serio" de raicode: cambió la piel (colores + fuentes),
+> se conservaron los huesos (spacing, radii, sombras, motion, utilidades).
+> La implementación viva es `app/globals.css` — tema `[data-theme="radar"]`.
+
+## Contexto del producto
+
+- **Qué es:** panel personal de 3 listas (tareas, fechas con cuenta
+  regresiva, proyectos con nota) con acomodos configurables.
+- **Para quién:** un solo usuario (Beto). Sin colaboración.
+- **Superficies:** iPad 11″ horizontal SIEMPRE prendido en una pared
+  (caso principal, ~1180×820 pt) + celular como PWA instalada.
+- **Tipo:** herramienta de trabajo personal, densidad media, cero adorno.
 
 ## Dirección estética
-serio · confiable · ordenado · preciso. Tu app arrancó con el tema Serio: azul profundo, grises limpios y tipografía muy legible. Se siente como una herramienta de trabajo. Cámbialo cuando quieras.
-Densidad media, mucho aire, jerarquía por tamaño y peso — no por color.
 
-## Color (CSS custom properties, ver theme-tokens.css)
-Un solo acento protagonista + neutros + semánticos. Nunca inventar colores nuevos.
+- **Dirección:** industrial-precisa — la "B" del logo es una grotesca
+  geométrica pesada; el producto se siente como ella: sobrio, sólido,
+  sin decoración, legible a distancia.
+- **Decoración:** mínima. La jerarquía la hacen el peso y el espacio,
+  nunca el color ni los adornos.
+- **Mood:** una herramienta que está tranquila en la pared de una casa.
+  Ni estridente ni tibia; presente.
+
+## Color (implementado en `app/globals.css`, tema `radar`)
+
+Un solo acento protagonista — **el color exacto del logo** — y neutros
+fríos derivados de su misma familia (azul-gris, hue ~197°). Nunca
+inventar colores nuevos; usar SIEMPRE los tokens vía utilidades
+(`bg-app`, `text-default`, `btn-primary`, `var(--c-*)`).
 
 | rol | claro | oscuro |
 | --- | --- | --- |
-| bg | `#F6F8FA` | `#0E141B` |
-| surface | `#FFFFFF` | `#172029` |
-| border | `#DCE2E9` | `#26313D` |
-| text | `#16202B` | `#E7ECF2` |
-| text-muted | `#566472` | `#98A5B3` |
-| accent / hover / on | `#1C4E80` / `#163C63` / `#FFFFFF` | `#74A9E0` / `#93BEEC` / `#08131F` |
-| success / bg | `#16704F` / `#E4F1EB` | `#5CC49B` / `#10291F` |
-| warning / bg | `#8C6112` / `#F7EEDC` | `#DDB566` / `#2A2210` |
-| error / bg | `#A93226` / `#F9E7E5` | `#EC8175` / `#301714` |
+| bg | `#F5F7F8` | `#101517` |
+| surface | `#FFFFFF` | `#191F22` |
+| border | `#DBE1E5` | `#2B343A` |
+| text | `#1C2429` | `#E7ECEE` |
+| text-muted | `#5A6871` | `#97A5AC` |
+| accent / hover / on | `#3C464A` / `#2A3236` / `#FFFFFF` | `#A9BEC7` / `#BFD1D8` / `#0D1418` |
+| success / bg / on | `#16704F` / `#E4F1EB` / `#0E5239` | `#5CC49B` / `#10291F` / `#9BDFC4` |
+| warning / bg / on | `#8C6112` / `#F7EEDC` / `#66450A` | `#DDB566` / `#2A2210` / `#EED8A2` |
+| error / bg / on | `#A93226` / `#F9E7E5` / `#7E2119` | `#EC8175` / `#301714` / `#F7B4AB` |
+| info (= accent) / bg | `#3C464A` / `#E8ECEE` | `#A9BEC7` / `#202B31` |
 
-Todos los pares texto/fondo cumplen WCAG AA (>=4.5:1 en texto normal).
-Usar `--c-*` vía las utilidades (`bg-app`, `text-muted`, `btn-primary`…), no hex sueltos.
+- **Verificación:** los 16 pares texto/fondo clave pasan WCAG AA
+  (mínimo 5.35:1; la mayoría >7:1). Validado por script el 2026-08-13.
+- **Modo oscuro:** primera clase (el iPad de pared vive de noche). El
+  acento se invierte a un slate claro (`#A9BEC7`); los semánticos se
+  heredaron del tema anterior (ya verificados en oscuro).
+- Los semánticos (success/warning/error) se conservaron del tema Serio:
+  tonalmente compatibles con el slate y ya auditados AA.
 
-## Tipografía (next/font/google)
-- Display: **Libre Franklin** 600 — títulos, nombre de app, números grandes.
-- Body: **IBM Plex Sans** 400/600 — todo lo demás.
-- Escala: 12 / 13.5 / 15 / 19 / 27 / 38 px. Line-height 1.15 en títulos, 1.55 en texto.
+## Tipografía (via `next/font/google` en `app/layout.tsx`)
 
-```ts
-import { Libre_Franklin, IBM_Plex_Sans } from "next/font/google";
-```
+- **Display:** **Archivo** 700 (títulos, nombre de la app, números
+  grandes) — grotesca geométrica con ADN industrial: la misma sangre que
+  la letra del logo. Pesos 500/600/700.
+- **Body:** **Instrument Sans** 400/500/600 — humanista-grotesca, muy
+  legible en tamaños chicos y a distancia (pared). Soporta
+  `tabular-nums` (usado por `.num` en cuentas regresivas y contadores).
+- **Escala:** 12 / 13.5 / 15 / 19 / 27 / 38 px (sin cambios).
+  Line-height 1.15 títulos, 1.55 texto.
+- Nunca agregar una segunda familia ni cargar fuentes por CSS `@import`.
 
-## Spacing, radii, sombras, motion
-- Spacing: escala 4px (1=4 … 20=80). Padding de card 22-24px, gap de secciones 20-24px.
+## Spacing, radii, sombras, motion (LOS HUESOS — sin cambios)
+
+- Spacing: escala 4px (1=4 … 20=80). Padding de card 22-24px (16px móvil).
 - Radii: sm 6 / md 10 / lg 16 / full 999.
-- Sombras: solo `--shadow-1` (bordes sutiles) y `--shadow-2` (cards elevadas).
-- Motion: 200ms `cubic-bezier(.2,0,.2,1)` en color/border/opacity/shadow. Nada decorativo.
+- Sombras: solo `--shadow-1` y `--shadow-2`.
+- Motion: 200ms `cubic-bezier(.2,0,.2,1)` en color/border/opacity/shadow,
+  más las View Transitions del intercambio de zonas (ver Extensiones).
 
-## Componentes base (mismos en las 4 variantes)
-- **Estado vacío**: título, una línea de ayuda, CTA primario. Ninguna lista vacía queda en blanco.
-- **Loading**: skeleton en `--c-border` con pulse 1.2s (stagger 150ms) para contenido; spinner de 16px solo dentro del botón que disparó la acción. Nunca spinner de pantalla completa.
-- **Botones**: primary / secondary / tertiary / danger, cada uno con hover, focus-visible (`outline: 2px solid var(--c-accent); outline-offset: 2px`), disabled y loading.
-- **Forms**: input, select, textarea, checkbox, radio, toggle. Label arriba siempre visible; ayuda o error debajo en 12px. El error pinta el borde con `--c-error` y el mensaje dice qué hacer. Toque mínimo 44px en móvil.
-- **Contenido largo** (`prose`): máx. 68ch, line-height 1.65, títulos en display, links con borde inferior. No centrar ni justificar.
+## Componentes
 
-## Gráficas
-Serie principal `--c-series-1`; 2-4 son tonos de la misma familia. Máximo 4 series.
+Los componentes base y v1.1 del sistema (badges, tabs, bottom-nav,
+modal/sheet, toast, list-row, empty-state, skeleton, icon-btn, segmented)
+viven como `@utility` en `app/globals.css` y NO cambiaron con el
+branding. Reglas destacadas:
 
-| serie | claro | oscuro |
-| --- | --- | --- |
-| 1 | `#1C4E80` | `#74A9E0` |
-| 2 | `#4A7BAE` | `#4E80B5` |
-| 3 | `#86A9CE` | `#A6C8EE` |
-| 4 | `#12345A` | `#2F5A80` |
-
-Permitido: barras, líneas, área simple, dona de máximo 4 rebanadas. Grid solo horizontal en `--c-border`.
-Prohibido: 3D, arcoíris, doble eje Y, gradientes en las series.
-
-## Anti-patterns
-- Nunca gris puro sin tono: los neutros son azulados, no #808080.
-- Nada de esquinas muy redondas ni sombras suaves tipo app de bienestar.
-- Sin ilustraciones ni degradados; la jerarquía la hace el peso y el espacio.
-- No usar el acento como fondo de secciones grandes.
-- No agregar una segunda familia tipográfica ni un segundo acento.
-- No usar sombras de color ni bordes de 2px+.
-
-## Componentes v1.1 (mismos en las 4 variantes)
-
-- **Badge**: 5 tonos (neutral, success, warning, error, info). Pill de `padding: 4px 10px`, `--text-xs`, weight 600. Neutral va en outline (`--c-bg` + borde); los demás en tinte relleno sin borde. Punto opcional de 6px en `currentColor`. Conteos en `badge-count` (20px, fondo accent, `tabular-nums`). El texto dice el estado — el color nunca solo.
-- **Tabs**: activo en `--c-accent` con `box-shadow: inset 0 -2px 0`; inactivo en muted; hover suma `--c-bg`; focus `outline: 2px solid var(--c-accent); outline-offset: -2px`; disabled en `--c-border`. Si no caben, **scroll horizontal** — nunca dos filas. Máximo 5. Siempre tabs con subrayado. El segmentado se ve informal para un expediente.
-- **Bottom-nav** (solo móvil): 3-5 destinos, `56px + env(safe-area-inset-bottom)`, ícono 22px + etiqueta 10.5px/600. Activo con `aria-current="page"` en accent. El contenido reserva `calc(56px + safe-area + var(--space-4))`.
-- **Modal / sheet**: escritorio centrado `max-width: 380px`; móvil sheet desde abajo con handle de 36×4px. Destructivo: título que nombra la cosa, cuerpo que dice qué se pierde, botón "Sí, borrar" en `--c-error`, **foco inicial en Cancelar**, Esc y clic afuera cancelan. En móvil los botones se apilan con el peligroso arriba.
-- **Toast**: abajo-derecha en escritorio, arriba en móvil. 4s (7s con acción). Máximo 3. `border-left: 3px` del tono. Para confirmar lo hecho — un error que exige decisión va inline o en modal.
-- **Avatar**: 24/32/40/56px, iniciales en display sobre `--c-avatar-1..4`, índice = `suma de charCodes % 4` (determinista). Texto siempre `--c-text`.
-- **Imagen**: `aspect-ratio` fijo desde el primer render, `object-fit: cover`. Tres estados: cargando (pulse), sin foto (dashed + `image`), error (`--c-error-bg` + `image-off`).
-- **list-row**: min-height 56px, título truncado a una línea, meta en muted, badge a la derecha. Es la unidad que más se repite.
-
-## Móvil (el usuario final entra por el teléfono)
-
-Un solo breakpoint: **768px**. Abajo de eso, una columna.
-
-- La escala de texto **no cambia**; solo h1 38→30px y título de card 27→24px.
-- **Inputs a 16px**: menos dispara el zoom automático de iOS.
-- Padding de página 16px (24px en escritorio); padding de card 16px.
-- Botones a ancho completo, apilados, primario arriba, alto ≥48px.
-- **Las tablas se vuelven `list-row`.** Nunca scroll horizontal.
-- Header sticky de 56px: volver a la izquierda, una sola acción a la derecha.
-- Ancho máximo de contenido en escritorio: `--page-max: 1120px`.
+- **Estado vacío:** ninguna lista queda en blanco (título + línea de ayuda).
+- **Destructivo:** borrar SIEMPRE confirma nombrando la cosa, foco inicial
+  en Cancelar, peligroso arriba en móvil. Tachar = inmediato + Deshacer 7s.
+- **Toast:** 4s informativo / 7s con acción; arriba en móvil.
+- **Modal:** centrado en escritorio, sheet desde abajo en móvil.
 
 ## Iconografía
 
-**Lucide**, una sola librería, `stroke-width: 1.75`. 18px en botón con texto, 20px suelto, 22px en nav; caja de toque siempre 44px. Alineación con `flex` + `gap: 7px`.
+**Lucide**, única librería. `stroke-width` 1.75; 18px en botón con texto,
+20px suelto, 22px en bottom-nav; caja tocable siempre ≥44px.
 
-Funcional (permitido): el ícono **es** el control o etiqueta uno — borrar, editar, volver, cerrar, buscar, un destino del nav, el tono de un estado.
-Decorativo (prohibido): acompaña un título o rellena espacio. **Prueba**: si al borrarlo no cambia lo que el usuario puede hacer o entender, bórralo.
+- **Excepción aprobada (2026-08-13):** cada lista tiene un **ícono de
+  identidad** junto a su título — `ListTodo` (Tareas), `CalendarDays`
+  (Fechas), `FolderKanban` (Proyectos), definidos en
+  `components/kindIcons.ts` y compartidos con el bottom-nav. Es funcional
+  en este producto: con zonas intercambiables, el ícono identifica la
+  lista de un vistazo a distancia de pared. Fuera de este caso, sigue
+  prohibido el ícono decorativo junto a títulos.
+- Cero emoji en la UI.
 
-Ícono solo → `aria-label`. Ícono junto a texto → `aria-hidden="true"`.
+## Móvil (el celular entra por PWA)
 
-## Tokens nuevos de esta variante
+Un solo breakpoint: **768px**. Abajo: una columna, pestañas en la barra
+de abajo (nunca hamburguesa), inputs a 16px, botones ancho completo
+≥48px, tablas → list-rows, nunca scroll horizontal de página.
 
-Info = el acento. En una herramienta de trabajo, dos azules distintos confunden más de lo que ayudan.
+## Logo y marca
 
-| rol | claro | oscuro |
-| --- | --- | --- |
-| `--c-info` | `#1C4E80` | `#74A9E0` |
-| `--c-info-bg` | `#E4EAF0` | `#1E2C3B` |
-| `--c-on-info-bg` | `#1C4E80` | `#74A9E0` |
-| `--c-overlay` | `rgba(12,10,8,0.45)` | `rgba(0,0,0,0.7)` |
-| `--c-avatar-1` | `#D6DFE8` | `#354C64` |
-| `--c-avatar-2` | `#DEE7F0` | `#293F56` |
-| `--c-avatar-3` | `#E9F0F6` | `#455668` |
-| `--c-avatar-4` | `#D4DAE1` | `#1F3345` |
+- Archivo fuente: `public/logo.png` (376×422, fondo transparente).
+- Favicon: `app/icon.png` (512², transparente). iOS: `app/apple-icon.png`
+  (512², fondo `--c-bg` claro — iOS no soporta transparencia).
+- Manifest/Android: `public/logo-512.png`; `theme_color #3C464A`,
+  `background_color #F5F7F8` (espejo de tokens; el manifest no lee CSS).
+- El logo se muestra en la pantalla de login (h-14). En el header basta
+  el wordmark tipográfico.
 
-Todos medidos: el par de texto más bajo de v1.1 es 4.52:1.
+## Extensiones del proyecto (aprobadas 2026-08-13)
 
-## Anti-patterns v1.1
+- **Intercambio de zonas animado:** View Transitions API con
+  `--motion-duration`/`--motion-easing`; instantáneo con
+  `prefers-reduced-motion` o sin soporte del navegador.
+- **`scroll-panel` / `scroll-panel-x`:** scroll interno de las zonas de
+  altura fija; barra de 8px con `--c-border` (hover `--c-text-muted`),
+  espacio siempre reservado.
+- **Zonas del layout:** borde sutil (`--c-border`, `--radius-lg`), sin
+  fondo propio, altura fija llenando la pantalla — el contenido scrollea
+  adentro.
 
-- Nunca menú hamburguesa. Con 2-5 secciones va bottom-nav; con más, cuatro y "Más".
-- Nunca scroll horizontal en una tabla en móvil.
-- Nunca un toast para un error que necesita decisión del usuario.
-- Nunca borrar sin confirmar, y nunca con el foco puesto en el botón peligroso.
-- Nunca dos librerías de iconos en la misma app.
-- Nunca un ícono decorativo junto a un título.
+## Anti-patterns (vigentes)
 
-## Extensiones del proyecto radar-personal (aprobadas 2026-08-13)
+- Nada de hex sueltos en componentes — solo tokens/utilidades.
+- Nada de pixeles fuera de la escala de 4px.
+- No usar el acento como fondo de secciones grandes.
+- Ni una segunda familia tipográfica ni un segundo acento.
+- Nunca menú hamburguesa; nunca borrar sin confirmar; nunca un toast
+  para un error que exige decisión.
+- Sin gradientes, sin 3D, sin ilustraciones decorativas.
 
-Patrones agregados a petición del dueño, implementados 100% con tokens
-existentes (ver el bloque "Extensiones" al final de `app/globals.css`):
+## Bitácora de decisiones
 
-- **Intercambio de zonas animado**: al cambiar de acomodo o intercambiar
-  listas entre zonas del layout de iPad, se usa la View Transitions API
-  (cada zona "viaja" a su nueva posición). Duración y easing salen de
-  `--motion-duration` / `--motion-easing`. Con `prefers-reduced-motion:
-  reduce` el cambio es instantáneo. En navegadores sin soporte, cae a
-  cambio instantáneo sin error.
-- **`scroll-panel` / `scroll-panel-x`**: scroll interno de las zonas de
-  altura fija del layout (vertical y horizontal). Barra delgada (8px)
-  pintada con `--c-border` (hover `--c-text-muted`), track transparente,
-  espacio de barra siempre reservado para que el layout no brinque.
-- **Zonas del layout**: contenedores con borde sutil (`--c-border`,
-  `--radius-lg`), SIN fondo propio (las tarjetas internas ya son surface),
-  y de altura fija — llenan el alto de la pantalla y el contenido scrollea
-  adentro; el borde nunca se "acorta" con listas cortas.
+| Fecha | Decisión | Razón |
+|------|----------|-------|
+| 2026-08-12 | Arranque con tema "Serio" de raicode | Default del scaffolding |
+| 2026-08-13 | Íconos de identidad por lista | Zonas intercambiables: reconocimiento a distancia (pedido del dueño) |
+| 2026-08-13 | Animación de swap + scrollbars tematizadas | Pedido del dueño; documentadas como extensiones |
+| 2026-08-13 | Branding propio anclado al logo: paleta slate `#3C464A` + Archivo/Instrument Sans | /design-consultation con el logo como ancla (pedido del dueño); AA verificado por script |

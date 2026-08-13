@@ -7,6 +7,7 @@ import type { NewItem } from "@/lib/useItems";
 import { daysUntil } from "@/lib/dates";
 import AddForm from "@/components/AddForm";
 import ItemRow, { ItemCard } from "@/components/ItemRow";
+import { KIND_ICONS } from "@/components/kindIcons";
 
 const EMPTY_COPY: Record<Kind, { title: string; help: string }> = {
   task: { title: "Sin pendientes", help: "Agrega tu primera tarea aquí arriba." },
@@ -71,12 +72,15 @@ export default function Column({
     kind === "date" ? it.due_date && daysUntil(it.due_date) >= 0 : !it.done
   ).length;
 
+  const KindIcon = KIND_ICONS[kind];
+
   if (horizontal) {
     return (
       <section className="flex min-w-0 flex-col gap-3" aria-label={KIND_LABELS[kind]}>
         {/* Encabezado compacto: título + selector, y la captura EN el mismo
             renglón (a 48px del selector) para que la fila sea menos alta. */}
         <div className="flex items-center gap-2">
+          <KindIcon className="icon text-muted" aria-hidden="true" />
           <h2 className="font-display text-lg text-default">{KIND_LABELS[kind]}</h2>
           {pending > 0 && <span className="badge-count">{pending}</span>}
           {titleAction}
@@ -113,6 +117,7 @@ export default function Column({
       aria-label={KIND_LABELS[kind]}
     >
       <div className="flex items-center gap-2">
+        <KindIcon className="icon text-muted" aria-hidden="true" />
         <h2 className="font-display text-lg text-default">{KIND_LABELS[kind]}</h2>
         {pending > 0 && <span className="badge-count">{pending}</span>}
         {titleAction}
