@@ -24,4 +24,6 @@ Las migraciones de la base viven en `supabase/migrations/`.
 
 ## App en vivo
 
-_Pendiente de publicar._
+**https://radar-personal.vercel.app**
+
+Cada push a `main` se despliega automáticamente (Vercel + GitHub).
