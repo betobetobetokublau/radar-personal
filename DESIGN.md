@@ -40,13 +40,21 @@ inventar colores nuevos; usar SIEMPRE los tokens vía utilidades
 | text | `#1C2429` | `#E7ECEE` |
 | text-muted | `#5A6871` | `#97A5AC` |
 | accent / hover / on | `#3C464A` / `#2A3236` / `#FFFFFF` | `#A9BEC7` / `#BFD1D8` / `#0D1418` |
+| cta / hover / on | `#1B62E0` / `#154EB8` / `#FFFFFF` | `#66A3F2` / `#85B7F6` / `#0B1524` |
 | success / bg / on | `#16704F` / `#E4F1EB` / `#0E5239` | `#5CC49B` / `#10291F` / `#9BDFC4` |
 | warning / bg / on | `#8C6112` / `#F7EEDC` / `#66450A` | `#DDB566` / `#2A2210` / `#EED8A2` |
 | error / bg / on | `#A93226` / `#F9E7E5` / `#7E2119` | `#EC8175` / `#301714` / `#F7B4AB` |
 | info (= accent) / bg | `#3C464A` / `#E8ECEE` | `#A9BEC7` / `#202B31` |
 
+- **Acento vs. CTA (regla de uso):** el **acento** (slate del logo) marca
+  IDENTIDAD y SELECCIÓN — navegación activa, círculos tachados, tabs,
+  contadores. El **CTA** (azul vibrante) marca ACCIÓN — todos los botones
+  primarios (`btn-primary`: agregar, guardar, entrar). Razón: el slate en
+  un botón parecía deshabilitado (el estado disabled también es gris).
+  Nunca usar el CTA como color de texto decorativo ni de fondo de secciones.
 - **Verificación:** los 16 pares texto/fondo clave pasan WCAG AA
-  (mínimo 5.35:1; la mayoría >7:1). Validado por script el 2026-08-13.
+  (mínimo 5.35:1; la mayoría >7:1) + los 2 pares del CTA (5.43:1 claro,
+  7.05:1 oscuro). Validado por script el 2026-08-13.
 - **Modo oscuro:** primera clase (el iPad de pared vive de noche). El
   acento se invierte a un slate claro (`#A9BEC7`); los semánticos se
   heredaron del tema anterior (ya verificados en oscuro).
@@ -146,3 +154,5 @@ de abajo (nunca hamburguesa), inputs a 16px, botones ancho completo
 | 2026-08-13 | Íconos de identidad por lista | Zonas intercambiables: reconocimiento a distancia (pedido del dueño) |
 | 2026-08-13 | Animación de swap + scrollbars tematizadas | Pedido del dueño; documentadas como extensiones |
 | 2026-08-13 | Branding propio anclado al logo: paleta slate `#3C464A` + Archivo/Instrument Sans | /design-consultation con el logo como ancla (pedido del dueño); AA verificado por script |
+| 2026-08-13 | Token CTA `#1B62E0` (azul de acción) separado del acento de identidad; `btn-primary` lo usa | El slate como botón parecía deshabilitado (feedback del dueño); AA verificado |
+| 2026-08-13 | Ícono de identidad también en estados vacíos (32px, muted, arriba del título) | Pedido del dueño; refuerza el reconocimiento de lista |

@@ -96,7 +96,8 @@ export default function Column({
             <div className="skeleton h-full w-56 flex-none" style={{ animationDelay: "300ms" }} />
           </div>
         ) : sorted.length === 0 ? (
-          <div className="empty-state h-36 justify-center py-0">
+          <div className="empty-state h-36 justify-center gap-2 py-0">
+            <KindIcon size={32} strokeWidth={1.75} className="text-muted" aria-hidden="true" />
             <p className="font-display text-default">{EMPTY_COPY[kind].title}</p>
             <p className="text-sm text-muted">{EMPTY_COPY[kind].help}</p>
           </div>
@@ -133,6 +134,7 @@ export default function Column({
         </div>
       ) : sorted.length === 0 ? (
         <div className="empty-state">
+          <KindIcon size={32} strokeWidth={1.75} className="text-muted" aria-hidden="true" />
           <p className="font-display text-default">{EMPTY_COPY[kind].title}</p>
           <p className="text-sm text-muted">{EMPTY_COPY[kind].help}</p>
         </div>

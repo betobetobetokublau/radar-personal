@@ -58,7 +58,7 @@ export default function AddForm({
 
   const titleInput = (
     <input
-      className="input-default min-w-0 flex-1"
+      className={`input-default min-w-0 flex-1 ${inline ? "max-w-xs" : ""}`}
       placeholder={PLACEHOLDERS[kind]}
       aria-label={PLACEHOLDERS[kind]}
       value={title}
