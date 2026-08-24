@@ -1,4 +1,14 @@
 {
+  "pages": [
+    {
+      "id": "ronda-1",
+      "name": "Ronda 1 · Columnas"
+    },
+    {
+      "id": "ronda-2",
+      "name": "Ronda 2 · Cards horizontales"
+    }
+  ],
   "artboards": [
     {
       "file": "Main.dc.html",
@@ -6,7 +16,8 @@
       "y": 0,
       "w": 1180,
       "h": 820,
-      "title": "A · Tres rieles — Semanal"
+      "title": "A · Tres rieles — Semanal",
+      "page": "ronda-1"
     },
     {
       "file": "AMensual.dc.html",
@@ -14,7 +25,8 @@
       "y": 960,
       "w": 1180,
       "h": 820,
-      "title": "A · Tres rieles — Mensual"
+      "title": "A · Tres rieles — Mensual",
+      "page": "ronda-1"
     },
     {
       "file": "BSemanal.dc.html",
@@ -22,7 +34,8 @@
       "y": 0,
       "w": 1180,
       "h": 820,
-      "title": "B · Hoy protagonista — Semanal"
+      "title": "B · Hoy protagonista — Semanal",
+      "page": "ronda-1"
     },
     {
       "file": "BMensual.dc.html",
@@ -30,7 +43,8 @@
       "y": 960,
       "w": 1180,
       "h": 820,
-      "title": "B · Hoy protagonista — Mensual"
+      "title": "B · Hoy protagonista — Mensual",
+      "page": "ronda-1"
     },
     {
       "file": "CSemanal.dc.html",
@@ -38,7 +52,8 @@
       "y": 0,
       "w": 1180,
       "h": 820,
-      "title": "C · Chips arriba — Semanal"
+      "title": "C · Chips arriba — Semanal",
+      "page": "ronda-1"
     },
     {
       "file": "CMensual.dc.html",
@@ -46,7 +61,8 @@
       "y": 960,
       "w": 1180,
       "h": 820,
-      "title": "C · Chips arriba — Mensual"
+      "title": "C · Chips arriba — Mensual",
+      "page": "ronda-1"
     },
     {
       "file": "DSemanal.dc.html",
@@ -54,7 +70,8 @@
       "y": 0,
       "w": 1180,
       "h": 820,
-      "title": "D · Densa — Semanal"
+      "title": "D · Densa — Semanal",
+      "page": "ronda-1"
     },
     {
       "file": "DMensual.dc.html",
@@ -62,7 +79,8 @@
       "y": 960,
       "w": 1180,
       "h": 820,
-      "title": "D · Densa — Mensual"
+      "title": "D · Densa — Mensual",
+      "page": "ronda-1"
     },
     {
       "file": "ESemanal.dc.html",
@@ -70,7 +88,8 @@
       "y": 0,
       "w": 1180,
       "h": 820,
-      "title": "E · Agenda en filas — Semanal"
+      "title": "E · Agenda en filas — Semanal",
+      "page": "ronda-1"
     },
     {
       "file": "EMensual.dc.html",
@@ -78,7 +97,71 @@
       "y": 960,
       "w": 1180,
       "h": 820,
-      "title": "E · Agenda en filas — Mensual"
+      "title": "E · Agenda en filas — Mensual",
+      "page": "ronda-1"
+    },
+    {
+      "file": "FSemanal.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "F · Cards limpias — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "GSemanal.dc.html",
+      "x": 1300,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "G · Hoy expandido — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "HSemanal.dc.html",
+      "x": 2600,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "H · Ancho total — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "ISemanal.dc.html",
+      "x": 3900,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "I · Dos columnas — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "JSemanal.dc.html",
+      "x": 5200,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "J · Con progreso — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "KSemanal.dc.html",
+      "x": 6500,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "K · Hábitos abajo (tarjetas) — Semanal",
+      "page": "ronda-2"
+    },
+    {
+      "file": "LSemanal.dc.html",
+      "x": 7800,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "L · Dock de hábitos — Semanal",
+      "page": "ronda-2"
     }
   ],
   "annotations": [
@@ -87,38 +170,100 @@
       "x": 0,
       "y": -170,
       "w": 460,
-      "text": "A · Tres rieles\nFiel al pedido: rail de hábitos + semana 7 columnas + próximos. Equilibrada.\nTradeoff: columnas de día angostas (~97px)."
+      "text": "A · Tres rieles\nFiel al pedido: rail de hábitos + semana 7 columnas + próximos. Equilibrada.\nTradeoff: columnas de día angostas (~97px).",
+      "page": "ronda-1"
     },
     {
       "id": "nota-b",
       "x": 1300,
       "y": -170,
       "w": 460,
-      "text": "B · Hoy protagonista\nEl día actual ocupa doble ancho: lo de HOY se lee desde lejos (pared).\nTradeoff: los otros días quedan más apretados."
+      "text": "B · Hoy protagonista\nEl día actual ocupa doble ancho: lo de HOY se lee desde lejos (pared).\nTradeoff: los otros días quedan más apretados.",
+      "page": "ronda-1"
     },
     {
       "id": "nota-c",
       "x": 2600,
       "y": -170,
       "w": 460,
-      "text": "C · Chips arriba\nHábitos como chips horizontales: un tap y listo; el calendario gana todo el ancho.\nTradeoff: los hábitos pierden detalle (complejidad/periodicidad ocultos)."
+      "text": "C · Chips arriba\nHábitos como chips horizontales: un tap y listo; el calendario gana todo el ancho.\nTradeoff: los hábitos pierden detalle (complejidad/periodicidad ocultos).",
+      "page": "ronda-1"
     },
     {
       "id": "nota-d",
       "x": 3900,
       "y": -170,
       "w": 460,
-      "text": "D · Densa\nRail de íconos (76px, punto de complejidad en la esquina) + mensual con puntos en vez de chips: máxima información por pantalla.\nTradeoff: menos legible a distancia; nombres y periodicidad solo al tocar."
+      "text": "D · Densa\nRail de íconos (76px, punto de complejidad en la esquina) + mensual con puntos en vez de chips: máxima información por pantalla.\nTradeoff: menos legible a distancia; nombres y periodicidad solo al tocar.",
+      "page": "ronda-1"
     },
     {
       "id": "nota-e",
       "x": 5200,
       "y": -170,
       "w": 460,
-      "text": "E · Agenda en filas\nLa semana como 7 renglones: lectura natural tipo agenda, texto nunca apretado.\nTradeoff: los días con mucho contenido compiten por una sola línea."
+      "text": "E · Agenda en filas\nLa semana como 7 renglones: lectura natural tipo agenda, texto nunca apretado.\nTradeoff: los días con mucho contenido compiten por una sola línea.",
+      "page": "ronda-1"
+    },
+    {
+      "id": "nota-f",
+      "x": 0,
+      "y": -170,
+      "w": 460,
+      "text": "F · Cards limpias\nTu anatomía tal cual: día+número, pila de íconos, badges con fecha. El punto de partida.\nTradeoff: los días vacíos gastan el mismo alto que los llenos.",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-g",
+      "x": 1300,
+      "y": -170,
+      "w": 460,
+      "text": "G · Hoy expandido\nLa card de HOY al doble de alto con íconos sólidos grandes — para leer desde la pared.\nTradeoff: los otros 6 días respiran menos.",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-h",
+      "x": 2600,
+      "y": -170,
+      "w": 460,
+      "text": "H · Ancho total\nHábitos como chips arriba: las cards de día ganan TODO el ancho.\nTradeoff: hábitos sin complejidad/periodicidad a la vista (solo el punto de color).",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-i",
+      "x": 3900,
+      "y": -170,
+      "w": 460,
+      "text": "I · Dos columnas\nSemana partida Lun–Jue / Vie–Dom + card de resumen semanal: cards altas y anchas.\nTradeoff: rompe la lectura lineal de la semana.",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-j",
+      "x": 5200,
+      "y": -170,
+      "w": 460,
+      "text": "J · Con progreso\nCada card muestra su avance (2/5) y HOY enseña también los hábitos pendientes (punteados) — ves lo que falta, no solo lo hecho.\nTradeoff: más tinta por card.",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-k",
+      "x": 6500,
+      "y": -170,
+      "w": 460,
+      "text": "K · Hábitos abajo (tarjetas)\nSemana en columnas SIN rail izquierdo (columnas ~30% más anchas) + barra inferior de hábitos con detalle completo (~23% del alto).\nTradeoff: los hábitos quedan lejos del pulgar si el iPad está alto en la pared.",
+      "page": "ronda-2"
+    },
+    {
+      "id": "nota-l",
+      "x": 7800,
+      "y": -170,
+      "w": 460,
+      "text": "L · Dock de hábitos\nIgual que K pero con dock minimal (~16% del alto): círculos grandes tocables, la semana gana aún más aire.\nTradeoff: complejidad/periodicidad solo como punto de color.",
+      "page": "ronda-2"
     }
   ],
   "launch": {
-    "view": "canvas"
+    "view": "canvas",
+    "page": "ronda-2"
   }
 }

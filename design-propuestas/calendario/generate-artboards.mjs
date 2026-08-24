@@ -351,6 +351,7 @@ const boards = {
     content(habitRail() + `<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px">${monthNav()}${monthGrid({ mode: "dots", weekProgress: true })}</div>`)),
 };
 
+if (import.meta.main) {
 for (const [name, html] of Object.entries(boards)) {
   writeFileSync(`${name}.dc.html`, html);
   console.log(`✓ ${name}.dc.html (${(html.length / 1024).toFixed(1)} KB)`);
@@ -379,3 +380,15 @@ const canvas = {
 };
 writeFileSync("canvas.json", JSON.stringify(canvas, null, 2));
 console.log("✓ canvas.json");
+}
+
+// piezas compartidas con la ronda 2
+export {
+  T, ic, HABITS, DAYS, UPCOMING, HAB_BY_NAME,
+  toneBg, toneFg, toneSolid,
+  header, zone, zoneTitle, checkCircle, compBadge,
+  habitRail, habitRailIcons, habitChips,
+  eventChip, habitStamp, upcomingRail,
+  weekColumns, weekRows,
+  shell, content, boards as ronda1Boards,
+};
