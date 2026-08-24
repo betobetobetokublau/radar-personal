@@ -1,0 +1,124 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "A · Tres rieles — Semanal"
+    },
+    {
+      "file": "AMensual.dc.html",
+      "x": 0,
+      "y": 960,
+      "w": 1180,
+      "h": 820,
+      "title": "A · Tres rieles — Mensual"
+    },
+    {
+      "file": "BSemanal.dc.html",
+      "x": 1300,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "B · Hoy protagonista — Semanal"
+    },
+    {
+      "file": "BMensual.dc.html",
+      "x": 1300,
+      "y": 960,
+      "w": 1180,
+      "h": 820,
+      "title": "B · Hoy protagonista — Mensual"
+    },
+    {
+      "file": "CSemanal.dc.html",
+      "x": 2600,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "C · Chips arriba — Semanal"
+    },
+    {
+      "file": "CMensual.dc.html",
+      "x": 2600,
+      "y": 960,
+      "w": 1180,
+      "h": 820,
+      "title": "C · Chips arriba — Mensual"
+    },
+    {
+      "file": "DSemanal.dc.html",
+      "x": 3900,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "D · Densa — Semanal"
+    },
+    {
+      "file": "DMensual.dc.html",
+      "x": 3900,
+      "y": 960,
+      "w": 1180,
+      "h": 820,
+      "title": "D · Densa — Mensual"
+    },
+    {
+      "file": "ESemanal.dc.html",
+      "x": 5200,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "E · Agenda en filas — Semanal"
+    },
+    {
+      "file": "EMensual.dc.html",
+      "x": 5200,
+      "y": 960,
+      "w": 1180,
+      "h": 820,
+      "title": "E · Agenda en filas — Mensual"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "nota-a",
+      "x": 0,
+      "y": -170,
+      "w": 460,
+      "text": "A · Tres rieles\nFiel al pedido: rail de hábitos + semana 7 columnas + próximos. Equilibrada.\nTradeoff: columnas de día angostas (~97px)."
+    },
+    {
+      "id": "nota-b",
+      "x": 1300,
+      "y": -170,
+      "w": 460,
+      "text": "B · Hoy protagonista\nEl día actual ocupa doble ancho: lo de HOY se lee desde lejos (pared).\nTradeoff: los otros días quedan más apretados."
+    },
+    {
+      "id": "nota-c",
+      "x": 2600,
+      "y": -170,
+      "w": 460,
+      "text": "C · Chips arriba\nHábitos como chips horizontales: un tap y listo; el calendario gana todo el ancho.\nTradeoff: los hábitos pierden detalle (complejidad/periodicidad ocultos)."
+    },
+    {
+      "id": "nota-d",
+      "x": 3900,
+      "y": -170,
+      "w": 460,
+      "text": "D · Densa\nRail de íconos (76px, punto de complejidad en la esquina) + mensual con puntos en vez de chips: máxima información por pantalla.\nTradeoff: menos legible a distancia; nombres y periodicidad solo al tocar."
+    },
+    {
+      "id": "nota-e",
+      "x": 5200,
+      "y": -170,
+      "w": 460,
+      "text": "E · Agenda en filas\nLa semana como 7 renglones: lectura natural tipo agenda, texto nunca apretado.\nTradeoff: los días con mucho contenido compiten por una sola línea."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
