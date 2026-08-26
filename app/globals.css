@@ -91,6 +91,9 @@
   --c-habit-azul: #5B7BA6;
   --c-habit-violeta: #7C66B8;
   --c-habit-verde: #4E8F6E;
+  /* Borde fuerte (pedido del dueño 2026-08-26): delinea las columnas de
+     día del calendario con más presencia que --c-border. */
+  --c-border-strong: #2F5F7F;
   --c-success: #16704F;
   --c-success-bg: #E4F1EB;
   --c-on-success-bg: #0E5239;
@@ -127,6 +130,7 @@
   --c-habit-azul: #8FB0D4;
   --c-habit-violeta: #A796DB;
   --c-habit-verde: #7CBFA0;
+  --c-border-strong: #5D89A6;
   --c-success: #5CC49B;
   --c-success-bg: #10291F;
   --c-on-success-bg: #9BDFC4;

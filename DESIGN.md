@@ -174,3 +174,5 @@ error). Máximo estos 5; un hábito nuevo elige de la paleta, no inventa.
 | 2026-08-13 | Branding propio anclado al logo: paleta slate `#3C464A` + Archivo/Instrument Sans | /design-consultation con el logo como ancla (pedido del dueño); AA verificado por script |
 | 2026-08-13 | Token CTA `#1B62E0` (azul de acción) separado del acento de identidad; `btn-primary` lo usa | El slate como botón parecía deshabilitado (feedback del dueño); AA verificado |
 | 2026-08-13 | Ícono de identidad también en estados vacíos (32px, muted, arriba del título) | Pedido del dueño; refuerza el reconocimiento de lista |
+| 2026-08-26 | Token `--c-border-strong` `#2F5F7F` (oscuro `#5D89A6`) para las columnas de día del calendario | Pedido del dueño: delinear los días con más presencia que `--c-border` |
+| 2026-08-26 | Semana: cards de próximos/hábitos con ancho FIJO + scroll horizontal (nunca se estiran); >2 semanas → fondo `--c-bg`; hábito completado → fondo `--c-bg`; íconos del día en círculo con borde | Refinamientos del dueño tras uso real |

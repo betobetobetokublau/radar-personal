@@ -53,7 +53,7 @@ export default function HabitDock({
         )}
       </div>
 
-      <ul className="scroll-panel-x flex gap-3 md:overflow-visible">
+      <ul className="scroll-panel-x flex gap-3">
         {habits.map((h) => {
           const dates = doneByHabit.get(h.id) ?? new Set<string>();
           const done = dates.has(today);
@@ -67,14 +67,16 @@ export default function HabitDock({
               })()
             : lastDoneLabel([...dates], today);
           return (
-            <li key={h.id} className="w-40 flex-none md:w-auto md:flex-1">
+            <li key={h.id} className="w-44 flex-none">
               <button
                 type="button"
                 aria-pressed={done}
                 aria-label={done ? `Desmarcar "${h.title}" de hoy` : `Marcar "${h.title}" como hecho hoy`}
                 onClick={() => onToggle(h, done)}
-                className={`relative flex w-full flex-col items-center gap-1.5 rounded-[var(--radius-md)] border bg-surface px-3 pb-3 pt-4 transition-colors ${
-                  done ? "border-[var(--c-accent)]" : "border-default"
+                className={`relative flex w-full flex-col items-center gap-1.5 rounded-[var(--radius-md)] border px-3 pb-3 pt-4 transition-colors ${
+                  done
+                    ? "border-[var(--c-accent)] bg-app"
+                    : "border-default bg-surface"
                 }`}
               >
                 {done && (
@@ -111,7 +113,7 @@ export default function HabitDock({
             </li>
           );
         })}
-        <li className="w-40 flex-none md:w-auto md:flex-1">
+        <li className="w-44 flex-none">
           <Link
             href="/habitos"
             className="flex h-full w-full flex-col items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-default bg-surface px-3 py-4 text-muted transition-colors hover:border-[var(--c-accent)]"

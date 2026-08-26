@@ -29,7 +29,9 @@ function useToday(): string {
   return today;
 }
 
-export default function WeekView() {
+export type WeekMode = "semana" | "rodante";
+
+export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
   const { items, error: itemsError } = useItems();
   const {
     habits, completions, loading, error: habitsError, toggleToday,
@@ -50,11 +52,15 @@ export default function WeekView() {
     [items, today]
   );
 
-  // Datos por día de la semana actual (Lun–Dom).
+  // Datos por día. Dos modos:
+  //  - "semana": Lun–Dom de la semana calendario (el resaltado se corre).
+  //  - "rodante": los últimos 7 días, con HOY siempre al extremo derecho.
   const days = useMemo(() => {
     const habitById = new Map(habits.map((h) => [h.id, h]));
+    const todayDate = parseLocalDate(today);
     return Array.from({ length: 7 }, (_, i) => {
-      const date = addDays(monday, i);
+      const date =
+        mode === "rodante" ? addDays(todayDate, i - 6) : addDays(monday, i);
       const ymd = toYmd(date);
       const dayHabits = completions
         .filter((c) => c.done_on === ymd)
@@ -64,7 +70,7 @@ export default function WeekView() {
         .filter((it) => it.kind === "date" && it.due_date === ymd)
         .map((it) => ({ title: it.title, past: ymd < today }));
       return {
-        name: DAY_NAMES[i],
+        name: DAY_NAMES[(date.getDay() + 6) % 7],
         n: date.getDate(),
         ymd,
         today: ymd === today,
@@ -72,7 +78,7 @@ export default function WeekView() {
         events,
       };
     });
-  }, [habits, completions, items, today, monday]);
+  }, [habits, completions, items, today, monday, mode]);
 
   async function handleToggle(habit: Habit, wasDone: boolean) {
     const ok = await toggleToday(habit.id);
@@ -87,11 +93,21 @@ export default function WeekView() {
 
   const error = itemsError || habitsError;
 
+  // Ícono de hábito completado: dentro de un círculo con borde de su color.
   const dayHabitIcons = (day: (typeof days)[number], size: number) =>
     day.habits.map((h, i) => {
       const Icon = habitIcon(h.icon);
       return (
-        <span key={`${h.id}-${i}`} title={h.title} style={{ color: habitColorVar(h.color) }}>
+        <span
+          key={`${h.id}-${i}`}
+          title={h.title}
+          className="grid flex-none place-items-center rounded-full border border-current"
+          style={{
+            color: habitColorVar(h.color),
+            width: size + 14,
+            height: size + 14,
+          }}
+        >
           <Icon size={size} strokeWidth={1.75} aria-hidden="true" />
           <span className="sr-only">{h.title}</span>
         </span>
@@ -131,15 +147,16 @@ export default function WeekView() {
             Sin eventos en los próximos 2 meses. Agrégalos en Listas → Fechas.
           </p>
         ) : (
-          <ul className="scroll-panel-x flex gap-3 md:overflow-visible">
+          <ul className="scroll-panel-x flex gap-3">
             {upcoming.map((u) => {
-              const soon = daysUntil(u.due_date!) <= 2;
+              const dias = daysUntil(u.due_date!);
+              const soon = dias <= 2;
               return (
                 <li
                   key={u.id}
-                  className={`w-52 flex-none rounded-[var(--radius-md)] border bg-surface px-3.5 py-2.5 md:w-auto md:flex-1 md:min-w-0 ${
+                  className={`w-56 flex-none rounded-[var(--radius-md)] border px-3.5 py-2.5 ${
                     soon ? "border-[var(--c-accent)]" : "border-default"
-                  }`}
+                  } ${dias <= 14 ? "bg-surface" : "bg-app"}`}
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-bold text-default">
@@ -169,7 +186,9 @@ export default function WeekView() {
           <div
             key={day.ymd}
             className={`flex min-h-0 min-w-0 flex-col gap-2 rounded-[var(--radius-md)] border p-2 ${
-              day.today ? "border-[var(--c-accent)] bg-surface" : "border-default"
+              day.today
+                ? "border-[var(--c-accent)] bg-surface"
+                : "border-[var(--c-border-strong)]"
             }`}
           >
             <div className="flex-none border-b border-[var(--c-border)] pb-1.5 text-center">
@@ -203,7 +222,7 @@ export default function WeekView() {
           <div
             key={day.ymd}
             className={`flex flex-col gap-2 rounded-[var(--radius-md)] border bg-surface p-3 ${
-              day.today ? "border-[var(--c-accent)]" : "border-default"
+              day.today ? "border-[var(--c-accent)]" : "border-[var(--c-border-strong)]"
             }`}
           >
             <div className="flex items-baseline gap-2">
