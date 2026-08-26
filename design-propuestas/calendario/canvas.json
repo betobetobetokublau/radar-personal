@@ -7,6 +7,10 @@
     {
       "id": "ronda-2",
       "name": "Ronda 2 · Cards horizontales"
+    },
+    {
+      "id": "ronda-3",
+      "name": "Ronda 3 · Tu dirección"
     }
   ],
   "artboards": [
@@ -162,6 +166,24 @@
       "h": 820,
       "title": "L · Dock de hábitos — Semanal",
       "page": "ronda-2"
+    },
+    {
+      "file": "MSemanal.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "M · Tu dirección (color) — Semanal",
+      "page": "ronda-3"
+    },
+    {
+      "file": "NSemanal.dc.html",
+      "x": 1300,
+      "y": 0,
+      "w": 1180,
+      "h": 820,
+      "title": "N · Tu dirección (mono) — Semanal",
+      "page": "ronda-3"
     }
   ],
   "annotations": [
@@ -260,10 +282,26 @@
       "w": 460,
       "text": "L · Dock de hábitos\nIgual que K pero con dock minimal (~16% del alto): círculos grandes tocables, la semana gana aún más aire.\nTradeoff: complejidad/periodicidad solo como punto de color.",
       "page": "ronda-2"
+    },
+    {
+      "id": "nota-m",
+      "x": 0,
+      "y": -170,
+      "w": 460,
+      "text": "M · Tu dirección (color)\nTu wireframe fiel: próximos arriba, semana solo-íconos con eventos anclados abajo, dock con racha/última vez. Íconos con COLOR por hábito (paleta curada apagada).\nTradeoff: agrega 5 colores al DS (extensión a documentar).",
+      "page": "ronda-3"
+    },
+    {
+      "id": "nota-n",
+      "x": 1300,
+      "y": -170,
+      "w": 460,
+      "text": "N · Tu dirección (mono)\nEl mismo layout, DS-estricto: todos los íconos en slate. Sobrio total.\nTradeoff: a distancia, los hábitos solo se distinguen por la forma del ícono.",
+      "page": "ronda-3"
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "ronda-2"
+    "page": "ronda-3"
   }
 }
