@@ -101,26 +101,32 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
     });
   }, [habits, completions, items, today, monday, mode, weekOffset]);
 
-  // Carriles fijos: cada hábito ocupa el MISMO renglón en todas las columnas
-  // de la semana (el sol del lunes se alinea con el sol del jueves). Orden:
-  // el hábito con el completado más temprano de la ventana visible va arriba;
-  // empate → orden de creación.
-  const slots = useMemo(() => {
+  // Orden dinámico de la semana: los hábitos más repetidos en la ventana
+  // visible van arriba, así el que se hizo varios días queda alineado entre
+  // columnas sin dejar huecos (cada día muestra solo lo hecho, compactado).
+  // Empates → completado más temprano primero, luego orden de creación.
+  const weekRank = useMemo(() => {
+    const count = new Map<string, number>();
     const earliest = new Map<string, string>();
     for (const day of days) {
       for (const h of day.habits) {
+        count.set(h.id, (count.get(h.id) ?? 0) + 1);
         const cur = earliest.get(h.id);
         if (!cur || day.ymd < cur) earliest.set(h.id, day.ymd);
       }
     }
-    return habits
-      .filter((h) => earliest.has(h.id))
+    const ordered = [...habits]
+      .filter((h) => count.has(h.id))
       .sort((a, b) => {
+        const ca = count.get(a.id)!;
+        const cb = count.get(b.id)!;
+        if (ca !== cb) return cb - ca;
         const ea = earliest.get(a.id)!;
         const eb = earliest.get(b.id)!;
         if (ea !== eb) return ea < eb ? -1 : 1;
         return habits.indexOf(a) - habits.indexOf(b);
       });
+    return new Map(ordered.map((h, i) => [h.id, i]));
   }, [days, habits]);
 
   async function handleToggle(habit: Habit, wasDone: boolean) {
@@ -140,23 +146,14 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
 
   const error = itemsError || habitsError;
 
-  // Íconos del día por CARRIL: círculo con borde de su color donde el hábito
-  // se hizo; hueco invisible del mismo tamaño donde no — así los íconos
-  // quedan alineados verticalmente entre columnas.
+  // Íconos del día: solo lo hecho, sin huecos, en el orden dinámico de la
+  // semana — los repetidos suben y coinciden visualmente entre columnas.
   const dayHabitIcons = (day: (typeof days)[number], size: number) => {
     if (day.habits.length === 0) return null;
-    const doneIds = new Set(day.habits.map((h) => h.id));
-    return slots.map((h) => {
-      if (!doneIds.has(h.id)) {
-        return (
-          <span
-            key={h.id}
-            aria-hidden="true"
-            className="invisible flex-none"
-            style={{ width: size + 14, height: size + 14 }}
-          ></span>
-        );
-      }
+    const sorted = [...day.habits].sort(
+      (a, b) => (weekRank.get(a.id) ?? 0) - (weekRank.get(b.id) ?? 0)
+    );
+    return sorted.map((h) => {
       const Icon = habitIcon(h.icon);
       return (
         <span
