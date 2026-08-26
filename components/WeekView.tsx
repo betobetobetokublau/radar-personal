@@ -101,10 +101,11 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
     });
   }, [habits, completions, items, today, monday, mode, weekOffset]);
 
-  // Orden dinámico de la semana: los hábitos más repetidos en la ventana
-  // visible van arriba, así el que se hizo varios días queda alineado entre
-  // columnas sin dejar huecos (cada día muestra solo lo hecho, compactado).
-  // Empates → completado más temprano primero, luego orden de creación.
+  // Orden dinámico de la semana, sin huecos: cada día muestra solo lo hecho,
+  // compactado, pero el orden global se elige para que la MAYOR cantidad de
+  // íconos repetidos coincida verticalmente entre columnas. Con pocos hábitos
+  // se prueban todos los ordenamientos posibles y gana el de más
+  // coincidencias; con muchos se usa la heurística "más repetido arriba".
   const weekRank = useMemo(() => {
     const count = new Map<string, number>();
     const earliest = new Map<string, string>();
@@ -115,7 +116,9 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         if (!cur || day.ymd < cur) earliest.set(h.id, day.ymd);
       }
     }
-    const ordered = [...habits]
+    // Punto de partida (y respaldo): más repetido arriba; empates → completado
+    // más temprano primero, luego orden de creación.
+    const base = [...habits]
       .filter((h) => count.has(h.id))
       .sort((a, b) => {
         const ca = count.get(a.id)!;
@@ -125,8 +128,53 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         const eb = earliest.get(b.id)!;
         if (ea !== eb) return ea < eb ? -1 : 1;
         return habits.indexOf(a) - habits.indexOf(b);
+      })
+      .map((h) => h.id);
+
+    const daySets = days
+      .map((d) => d.habits.map((h) => h.id))
+      .filter((s) => s.length > 0);
+
+    // Coincidencias verticales entre cada par de días si la semana usa este
+    // orden: mismo hábito en la misma posición compactada de ambas columnas.
+    const score = (order: string[]) => {
+      const rank = new Map(order.map((id, i) => [id, i]));
+      const cols = daySets.map((s) => {
+        const sorted = [...s].sort((a, b) => rank.get(a)! - rank.get(b)!);
+        return new Map(sorted.map((id, i) => [id, i]));
       });
-    return new Map(ordered.map((h, i) => [h.id, i]));
+      let total = 0;
+      for (let i = 0; i < cols.length; i++) {
+        for (let j = i + 1; j < cols.length; j++) {
+          for (const [id, pos] of cols[i]) {
+            if (cols[j].get(id) === pos) total++;
+          }
+        }
+      }
+      return total;
+    };
+
+    let best = base;
+    if (base.length >= 2 && base.length <= 7) {
+      let bestScore = score(base);
+      const permute = (order: string[], k: number) => {
+        if (k === order.length) {
+          const s = score(order);
+          if (s > bestScore) {
+            bestScore = s;
+            best = [...order];
+          }
+          return;
+        }
+        for (let i = k; i < order.length; i++) {
+          [order[k], order[i]] = [order[i], order[k]];
+          permute(order, k + 1);
+          [order[k], order[i]] = [order[i], order[k]];
+        }
+      };
+      permute([...base], 0);
+    }
+    return new Map(best.map((id, i) => [id, i]));
   }, [days, habits]);
 
   async function handleToggle(habit: Habit, wasDone: boolean) {
