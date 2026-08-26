@@ -93,7 +93,10 @@ const weekStrip = (mono) => `
 const check = `<span style="width:18px;height:18px;border-radius:999px;background:#16704F;color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;flex:none">${ic("check", 11)}</span>`;
 const habitDock = (mono) => `
 <div style="display:flex;flex-direction:column;gap:8px;flex:none">
-  ${zoneTitle("activity", "Hábitos", DOCK.filter((d) => !d.done).length)}
+  <div style="display:flex;align-items:center;gap:8px">
+    ${zoneTitle("activity", "Hábitos", DOCK.filter((d) => !d.done).length)}
+    <span style="font-size:12px;color:${T.muted}">pendientes hoy</span>
+  </div>
   <div style="display:flex;gap:10px">
     ${DOCK.map((d) => {
       const h = HAB_BY_NAME[d.name];
