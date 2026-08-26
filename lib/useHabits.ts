@@ -94,18 +94,21 @@ export function useHabits() {
     };
   }, [supabase, refresh]);
 
-  // Evita el doble-tap: un toggle en vuelo por hábito.
+  // Evita el doble-tap: un toggle en vuelo por hábito+día.
   const inFlight = useRef(new Set<string>());
 
-  /** Marca/desmarca el hábito HOY. Devuelve true si el servidor confirmó. */
-  const toggleToday = useCallback(
-    async (habitId: string): Promise<boolean> => {
-      if (inFlight.current.has(habitId)) return false;
-      inFlight.current.add(habitId);
+  /** Marca/desmarca el hábito en la fecha dada (hoy o un día pasado —
+   *  nunca futuro). Devuelve true si el servidor confirmó. */
+  const toggleOn = useCallback(
+    async (habitId: string, ymd: string): Promise<boolean> => {
+      if (ymd > todayYmd()) return false; // el futuro no se marca
+      const key = `${habitId}:${ymd}`;
+      if (inFlight.current.has(key)) return false;
+      inFlight.current.add(key);
       try {
-        return await doToggle(habitId);
+        return await doToggle(habitId, ymd);
       } finally {
-        inFlight.current.delete(habitId);
+        inFlight.current.delete(key);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,8 +116,7 @@ export function useHabits() {
   );
 
   const doToggle = useCallback(
-    async (habitId: string): Promise<boolean> => {
-      const today = todayYmd();
+    async (habitId: string, today: string): Promise<boolean> => {
       const existing = completionsRef.current.find(
         (c) => c.habit_id === habitId && c.done_on === today
       );
@@ -226,6 +228,6 @@ export function useHabits() {
 
   return {
     habits, completions, loading, error,
-    toggleToday, addHabit, updateHabit, removeHabit, refresh,
+    toggleOn, addHabit, updateHabit, removeHabit, refresh,
   };
 }

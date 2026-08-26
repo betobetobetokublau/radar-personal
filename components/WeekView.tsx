@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calendar, TriangleAlert } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, TriangleAlert } from "lucide-react";
 import { useItems } from "@/lib/useItems";
 import { useHabits } from "@/lib/useHabits";
 import type { Habit } from "@/lib/habits";
 import { habitColorVar, habitIcon } from "@/lib/habits";
 import {
-  addDays, DAY_NAMES, daysUntil, formatShortDate, parseLocalDate,
-  relativeUpcomingLabel, startOfWeek, todayYmd, toYmd,
+  addDays, DAY_NAMES, daysUntil, formatShortDate, MONTH_NAMES,
+  parseLocalDate, relativeUpcomingLabel, startOfWeek, todayYmd, toYmd,
 } from "@/lib/dates";
 import HabitDock from "@/components/HabitDock";
 import Toast, { type ToastData } from "@/components/Toast";
@@ -31,16 +31,35 @@ function useToday(): string {
 
 export type WeekMode = "semana" | "rodante";
 
+/** "Agosto 24–30" (o "Ago 31 – Sep 6" cuando la semana cruza de mes). */
+function weekLabel(startYmd: string, endYmd: string): string {
+  const s = parseLocalDate(startYmd);
+  const e = parseLocalDate(endYmd);
+  if (s.getMonth() === e.getMonth()) {
+    return `${MONTH_NAMES[s.getMonth()]} ${s.getDate()}–${e.getDate()}`;
+  }
+  return `${MONTH_NAMES[s.getMonth()].slice(0, 3)} ${s.getDate()} – ${MONTH_NAMES[e.getMonth()].slice(0, 3)} ${e.getDate()}`;
+}
+
 export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
   const { items, error: itemsError } = useItems();
   const {
-    habits, completions, loading, error: habitsError, toggleToday,
+    habits, completions, loading, error: habitsError, toggleOn,
   } = useHabits();
   const [toast, setToast] = useState<ToastData | null>(null);
   const dismissToast = useCallback(() => setToast(null), []);
 
   const today = useToday();
   const monday = useMemo(() => startOfWeek(parseLocalDate(today)), [today]);
+
+  // Navegación de semanas (0 = actual) y día seleccionado para editar
+  // hábitos (hoy por default; al cambiar el día real, regresa a hoy).
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [selected, setSelected] = useState<string>(today);
+  useEffect(() => {
+    setSelected(today);
+    setWeekOffset(0);
+  }, [today]);
 
   // Próximos eventos: los siguientes 2 meses, máx 5 tarjetas.
   const upcoming = useMemo(
@@ -52,15 +71,17 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
     [items, today]
   );
 
-  // Datos por día. Dos modos:
+  // Datos por día. Dos modos (± semanas con weekOffset):
   //  - "semana": Lun–Dom de la semana calendario (el resaltado se corre).
-  //  - "rodante": los últimos 7 días, con HOY siempre al extremo derecho.
+  //  - "rodante": ventana de 7 días que termina en HOY (extremo derecho).
   const days = useMemo(() => {
     const habitById = new Map(habits.map((h) => [h.id, h]));
     const todayDate = parseLocalDate(today);
     return Array.from({ length: 7 }, (_, i) => {
       const date =
-        mode === "rodante" ? addDays(todayDate, i - 6) : addDays(monday, i);
+        mode === "rodante"
+          ? addDays(todayDate, i - 6 + weekOffset * 7)
+          : addDays(monday, i + weekOffset * 7);
       const ymd = toYmd(date);
       const dayHabits = completions
         .filter((c) => c.done_on === ymd)
@@ -78,15 +99,19 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         events,
       };
     });
-  }, [habits, completions, items, today, monday, mode]);
+  }, [habits, completions, items, today, monday, mode, weekOffset]);
 
   async function handleToggle(habit: Habit, wasDone: boolean) {
-    const ok = await toggleToday(habit.id);
+    const date = selected;
+    const ok = await toggleOn(habit.id, date);
     if (ok && !wasDone) {
       setToast({
-        message: `"${habit.title}" marcado hoy.`,
+        message:
+          date === today
+            ? `"${habit.title}" marcado hoy.`
+            : `"${habit.title}" marcado el ${formatShortDate(date)}.`,
         tone: "success",
-        action: { label: "Deshacer", onClick: () => void toggleToday(habit.id) },
+        action: { label: "Deshacer", onClick: () => void toggleOn(habit.id, date) },
       });
     }
   }
@@ -135,12 +160,40 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         </p>
       )}
 
-      {/* Próximos eventos */}
+      {/* Próximos eventos + navegador de semanas */}
       <section className="flex flex-none flex-col gap-2" aria-label="Próximos eventos">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Calendar className="icon text-muted" aria-hidden="true" />
           <h2 className="font-display text-lg text-default">Próximos eventos</h2>
           {upcoming.length > 0 && <span className="badge-count">{upcoming.length}</span>}
+          <div className="ml-auto flex items-center gap-1">
+            <button
+              type="button"
+              className="icon-btn"
+              data-plain="true"
+              aria-label="Semana anterior"
+              onClick={() => setWeekOffset((o) => o - 1)}
+            >
+              <ChevronLeft className="icon" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="min-h-11 rounded-[var(--radius-md)] px-2 text-sm font-semibold text-default"
+              title="Volver a la semana actual"
+              onClick={() => setWeekOffset(0)}
+            >
+              {weekLabel(days[0].ymd, days[6].ymd)}
+            </button>
+            <button
+              type="button"
+              className="icon-btn"
+              data-plain="true"
+              aria-label="Semana siguiente"
+              onClick={() => setWeekOffset((o) => o + 1)}
+            >
+              <ChevronRight className="icon" aria-hidden="true" />
+            </button>
+          </div>
         </div>
         {upcoming.length === 0 ? (
           <p className="rounded-[var(--radius-md)] border border-default bg-surface px-4 py-3 text-sm text-muted">
@@ -180,16 +233,22 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         )}
       </section>
 
-      {/* Semana — escritorio/iPad: 7 columnas */}
+      {/* Semana — escritorio/iPad: 7 columnas. Tocar un día pasado lo
+          selecciona: el dock edita los hábitos de ESE día. */}
       <div className="hidden min-h-0 flex-1 md:grid md:grid-cols-7 md:gap-2.5">
         {days.map((day) => (
-          <div
+          <button
             key={day.ymd}
-            className={`flex min-h-0 min-w-0 flex-col gap-2 rounded-[var(--radius-md)] border p-2 ${
-              day.today
+            type="button"
+            disabled={day.ymd > today}
+            aria-pressed={day.ymd === selected}
+            aria-label={`Seleccionar ${day.name} ${day.n}`}
+            onClick={() => setSelected(day.ymd)}
+            className={`flex min-h-0 min-w-0 flex-col gap-2 rounded-[var(--radius-md)] border p-2 text-left focus-visible:outline-2 focus-visible:outline-[var(--c-accent)] ${
+              day.ymd === selected
                 ? "border-[var(--c-accent)] bg-surface"
                 : "border-[var(--c-border-strong)]"
-            }`}
+            } ${day.ymd > today ? "cursor-default" : "cursor-pointer"}`}
           >
             <div className="flex-none border-b border-[var(--c-border)] pb-1.5 text-center">
               <div
@@ -214,18 +273,25 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
                 {dayEvents(day)}
               </div>
             )}
-          </div>
+          </button>
         ))}
       </div>
 
-      {/* Semana — celular: cards de día apiladas */}
+      {/* Semana — celular: cards de día apiladas (tocar selecciona el día) */}
       <div className="flex flex-col gap-2 md:hidden">
         {days.map((day) => (
-          <div
+          <button
             key={day.ymd}
-            className={`flex flex-col gap-2 rounded-[var(--radius-md)] border bg-surface p-3 ${
-              day.today ? "border-[var(--c-accent)]" : "border-[var(--c-border-strong)]"
-            }`}
+            type="button"
+            disabled={day.ymd > today}
+            aria-pressed={day.ymd === selected}
+            aria-label={`Seleccionar ${day.name} ${day.n}`}
+            onClick={() => setSelected(day.ymd)}
+            className={`flex w-full flex-col gap-2 rounded-[var(--radius-md)] border bg-surface p-3 text-left focus-visible:outline-2 focus-visible:outline-[var(--c-accent)] ${
+              day.ymd === selected
+                ? "border-[var(--c-accent)]"
+                : "border-[var(--c-border-strong)]"
+            } ${day.ymd > today ? "cursor-default" : "cursor-pointer"}`}
           >
             <div className="flex items-baseline gap-2">
               <span className="font-display text-lg text-default">{day.n}</span>
@@ -254,7 +320,7 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
             ) : (
               <span className="text-xs text-muted">—</span>
             )}
-          </div>
+          </button>
         ))}
       </div>
 
@@ -262,7 +328,10 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
         <HabitDock
           habits={habits}
           completions={completions}
+          date={selected}
+          today={today}
           onToggle={(h, wasDone) => void handleToggle(h, wasDone)}
+          onBackToToday={() => setSelected(today)}
         />
       )}
 
