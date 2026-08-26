@@ -200,9 +200,11 @@ export default function WeekView({ mode = "semana" }: { mode?: WeekMode }) {
                 {day.name}
               </div>
               <div className="font-display text-xl text-default">{day.n}</div>
-              {day.today && (
-                <div className="text-[11px] font-bold text-[var(--c-accent)]">HOY</div>
-              )}
+              {/* Renglón SIEMPRE presente (invisible si no es hoy) para que
+                  la línea divisoria quede a la misma altura en las 7 columnas. */}
+              <div className="text-[11px] font-bold text-[var(--c-accent)]" aria-hidden={!day.today}>
+                {day.today ? "HOY" : " "}
+              </div>
             </div>
             <div className="flex min-h-0 flex-1 flex-col items-center gap-3 overflow-y-auto pt-1.5">
               {dayHabitIcons(day, 24)}
