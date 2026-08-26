@@ -15,6 +15,7 @@ import {
 } from "@/lib/layout";
 import Header from "@/components/Header";
 import InstallHint from "@/components/InstallHint";
+import ViewTabs from "@/components/ViewTabs";
 import Column from "@/components/Column";
 import { KIND_ICONS } from "@/components/kindIcons";
 import ListPicker from "@/components/ListPicker";
@@ -147,7 +148,17 @@ export default function Panel() {
   return (
     <div className="app-shell">
       <Header>
-        <div className="hidden items-center gap-2 md:flex">
+        <ViewTabs />
+      </Header>
+
+      {/* En md+ el panel llena exactamente la pantalla (alto fijo, sin scroll
+          de página): las zonas mantienen siempre la misma altura y el scroll
+          vive DENTRO de cada una. */}
+      <main className="page has-bottom-nav md:h-[calc(100dvh_-_var(--header-height))] md:overflow-hidden">
+        <InstallHint />
+
+        {/* Acomodo de las zonas (solo pantalla grande) */}
+        <div className="hidden flex-none items-center justify-end gap-2 md:flex">
           <span className="text-sm font-semibold text-muted">Acomodo:</span>
           <div className="segmented" role="tablist" aria-label="Acomodo del panel">
             {(["3v", "2v1h"] as const).map((m) => (
@@ -164,13 +175,6 @@ export default function Panel() {
             ))}
           </div>
         </div>
-      </Header>
-
-      {/* En md+ el panel llena exactamente la pantalla (alto fijo, sin scroll
-          de página): las zonas mantienen siempre la misma altura y el scroll
-          vive DENTRO de cada una. */}
-      <main className="page has-bottom-nav md:h-[calc(100dvh_-_var(--header-height))] md:overflow-hidden">
-        <InstallHint />
 
         {error && (
           <p role="alert" className="alert-error px-4 py-3 text-sm">

@@ -32,7 +32,13 @@ export default function Header({ children }: { children?: React.ReactNode }) {
 
   return (
     <header className="app-header">
-      <h1 className="font-display text-lg text-default">Radar Personal</h1>
+      {/* En móvil, si hay navegación al centro, el wordmark no cabe: se oculta
+          (la marca vive en el ícono de la app). */}
+      <h1
+        className={`font-display text-lg text-default ${children ? "hidden md:block" : ""}`}
+      >
+        Radar Personal
+      </h1>
       <div className="flex min-w-0 flex-1 items-center justify-center">
         {children}
       </div>

@@ -124,6 +124,24 @@ de abajo (nunca hamburguesa), inputs a 16px, botones ancho completo
 - El logo se muestra en la pantalla de login (h-14). En el header basta
   el wordmark tipográfico.
 
+## Colores de hábito (paleta curada, aprobada 2026-08-13)
+
+Cada hábito tiene un color de IDENTIDAD además de su ícono (doble
+codificación: a distancia de pared el color se lee antes que la forma).
+Tokens `--c-habit-*` en `app/globals.css` (claro / oscuro):
+
+| nombre | claro | oscuro |
+| --- | --- | --- |
+| ambar | `#C07A3D` | `#D9A06B` |
+| vino | `#B05C6E` | `#D08A9B` |
+| azul | `#5B7BA6` | `#8FB0D4` |
+| violeta | `#7C66B8` | `#A796DB` |
+| verde | `#4E8F6E` | `#7CBFA0` |
+
+Reglas: SOLO para íconos y puntos de hábito — nunca texto, nunca fondos
+grandes, nunca estados semánticos (eso sigue siendo de success/warning/
+error). Máximo estos 5; un hábito nuevo elige de la paleta, no inventa.
+
 ## Extensiones del proyecto (aprobadas 2026-08-13)
 
 - **Intercambio de zonas animado:** View Transitions API con

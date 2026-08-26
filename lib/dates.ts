@@ -37,8 +37,49 @@ export function formatShortDate(ymd: string): string {
 
 /** Hoy como "YYYY-MM-DD" local (para el min del input de fecha). */
 export function todayYmd(): string {
-  const t = new Date();
-  const mm = String(t.getMonth() + 1).padStart(2, "0");
-  const dd = String(t.getDate()).padStart(2, "0");
-  return `${t.getFullYear()}-${mm}-${dd}`;
+  return toYmd(new Date());
+}
+
+export function toYmd(d: Date): string {
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+export function addDays(d: Date, n: number): Date {
+  const copy = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  copy.setDate(copy.getDate() + n);
+  return copy;
+}
+
+/** Lunes de la semana de `d` (la semana SIEMPRE empieza en lunes). */
+export function startOfWeek(d: Date): Date {
+  const day = d.getDay(); // 0=Dom … 6=Sáb
+  const diff = day === 0 ? -6 : 1 - day;
+  return addDays(d, diff);
+}
+
+export const DAY_NAMES = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+export const MONTH_NAMES = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+];
+
+/** Etiqueta relativa para próximos eventos: "hoy", "mañana", "en 3 días",
+ *  "en 2 semanas", "en 1 mes y medio", "en 2 meses". */
+export function relativeUpcomingLabel(ymd: string): string {
+  const n = daysUntil(ymd);
+  if (n <= 0) return "hoy";
+  if (n === 1) return "mañana";
+  if (n < 7) return `en ${n} días`;
+  if (n < 27) {
+    const w = Math.round(n / 7);
+    return w === 1 ? "en 1 semana" : `en ${w} semanas`;
+  }
+  const halves = Math.round(n / 15.2); // medios meses
+  const months = Math.floor(halves / 2);
+  const half = halves % 2 === 1;
+  if (months === 0) return "en medio mes";
+  if (months === 1) return half ? "en 1 mes y medio" : "en 1 mes";
+  return half ? `en ${months} meses y medio` : `en ${months} meses`;
 }
